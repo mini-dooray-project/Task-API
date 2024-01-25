@@ -1,0 +1,8 @@
+POST http://localhost:8070/api/comments
+Content-Type: application/json
+
+{
+  "taskId": 11,
+  "registrantAccount": "test user",
+  "content": "comment content"
+}

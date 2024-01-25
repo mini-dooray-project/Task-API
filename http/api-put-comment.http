@@ -1,0 +1,8 @@
+PUT http://localhost:8070/api/comments/1
+Content-Type: application/json
+
+{
+  "taskId": 12,
+  "registrantAccount": "test user",
+  "content": "comment content2"
+}
