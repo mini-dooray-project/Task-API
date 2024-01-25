@@ -21,8 +21,23 @@ public class Project {
 
     @JoinColumn(name = "status_id")
     @OneToOne
-    private ProjectStatus status;
+    private ProjectStatus projectStatus;
 
     @Column(name = "project_name")
     private String projectName;
+
+    public Project(ProjectStatus projectStatus, String projectName) {
+        this.projectStatus = projectStatus;
+        this.projectName = projectName;
+    }
+
+    public Project() {
+    }
+
+    public Project updateProject(String projectName, ProjectStatus projectStatus) {
+        this.projectName = projectName;
+        this.projectStatus = projectStatus;
+
+        return this;
+    }
 }

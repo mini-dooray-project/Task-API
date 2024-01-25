@@ -1,0 +1,5 @@
+GET http://localhost:8070/api/projects
+
+###
+
+GET http://localhost:8070/api/projects/1

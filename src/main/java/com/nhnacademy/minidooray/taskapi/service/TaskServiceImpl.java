@@ -89,6 +89,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public void deleteTask(Long taskId) {
         Optional<Task> byId = taskRepository.findById(taskId);
         if (byId.isEmpty()) {

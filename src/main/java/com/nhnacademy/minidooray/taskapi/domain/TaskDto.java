@@ -8,41 +8,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-//public interface TaskDto {
-//    Long getTaskId();
-//    String getTitle();
-//    String getContent();
-//    String getRegistrantAccount();
-//    LocalDateTime getCreatedDate();
-//    LocalDateTime getExpireDate();
-//
-//    Milestone getMilestone();
-//    Project getProject();
-//
-//    interface Milestone {
-//        Long getMilestoneId();
-//    }
-//
-//    interface Project {
-//        Long getProjectId();
-//    }
-//
-//
-//}
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaskDto {
-    Long taskId;
-    String title;
-    String content;
-    String registrantAccount;
-    LocalDateTime createdDate;
-    LocalDateTime expireDate;
+    private Long taskId;
+    private String title;
+    private String content;
+    private String registrantAccount;
+    private LocalDateTime createdDate;
+    private LocalDateTime expireDate;
 
-    Long projectId;
-    Long milestoneId;
+    private Long projectId;
+    private Long milestoneId;
 
     public TaskDto entityToDto(Task task) {
         this.taskId = task.getTaskId();

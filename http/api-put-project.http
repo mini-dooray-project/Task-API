@@ -1,0 +1,7 @@
+PUT http://localhost:8070/api/projects/3
+Content-Type: application/json
+
+{
+  "statusId": 2,
+  "projectName": "test project test"
+}
