@@ -5,6 +5,7 @@ import com.nhnacademy.minidooray.taskapi.domain.TaskRequest;
 import com.nhnacademy.minidooray.taskapi.entity.Milestone;
 import com.nhnacademy.minidooray.taskapi.entity.Project;
 import com.nhnacademy.minidooray.taskapi.entity.Task;
+import com.nhnacademy.minidooray.taskapi.exception.MilestoneNotExistException;
 import com.nhnacademy.minidooray.taskapi.exception.ProjectNotExistException;
 import com.nhnacademy.minidooray.taskapi.exception.TaskNotExistException;
 import com.nhnacademy.minidooray.taskapi.repository.MilestoneRepository;
@@ -69,6 +70,9 @@ public class TaskServiceImpl implements TaskService {
 
         Optional<Milestone> milestone = Optional.empty();
         if (Objects.nonNull(taskRequest.getMilestoneId())) {
+            if (milestoneRepository.findById(taskRequest.getMilestoneId()).isEmpty()) {
+                throw new MilestoneNotExistException("마일스톤이 존재하지 않습니다.");
+            }
             milestone = milestoneRepository.findById(taskRequest.getMilestoneId());
         }
         Optional<Project> project = projectRepository.findById(taskRequest.getProjectId());
@@ -85,7 +89,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDto deleteTask(Long taskId) {
-        return null;
+    public void deleteTask(Long taskId) {
+        Optional<Task> byId = taskRepository.findById(taskId);
+        if (byId.isEmpty()) {
+            throw new TaskNotExistException("업무가 존재하지 않습니다.");
+        }
+
+        taskRepository.deleteById(taskId);
     }
 }

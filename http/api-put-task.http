@@ -1,0 +1,10 @@
+PUT http://localhost:8070/api/tasks/4
+Content-Type: application/json
+
+{
+    "title": "test",
+    "content": "test",
+    "registrantAccount": "testUser",
+    "expireDate": "2022-01-23T15:30:00",
+    "projectId": 1
+}
