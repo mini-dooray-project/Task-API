@@ -1,3 +1,8 @@
+# DROP TABLE `project_authority`;
+# DROP TABLE `project_status`;
+# DROP TABLE `project`;
+
+
 CREATE TABLE `project_authority`
 (
     `authority_id`   BigInt AUTO_INCREMENT NOT NULL,
@@ -25,16 +30,27 @@ CREATE TABLE `project_member`
 (
     `account_id`   varchar(20) NOT NULL,
     `project_id`   BigInt      NOT NULL,
-    `authority_id` BigInt      NOT NULL,
+    `authority_id` BigInt      NULL,
     primary key (`account_id`, `project_id`),
-    foreign key (`project_id`) references project (project_id) on delete set null ,
+    foreign key (`project_id`) references project (project_id) on delete cascade,
     foreign key (`authority_id`) references project_authority (`authority_id`) on delete set null
+);
+
+CREATE TABLE `milestone`
+(
+    `milestone_id`   BigInt AUTO_INCREMENT NOT NULL,
+    `project_id`     BigInt                NOT NULL,
+    `milestone_name` varchar(20)           NOT NULL,
+    `start_date` datetime null ,
+    `expire_date` datetime null ,
+    primary key (milestone_id),
+    foreign key (`project_id`) references project (`project_id`) on delete cascade
 );
 
 CREATE TABLE `task`
 (
     `task_id`            BigInt AUTO_INCREMENT NOT NULL,
-    `milestone_id`       BigInt                NOT NULL,
+    `milestone_id`       BigInt                NULL,
     `project_id`         BigInt                NOT NULL,
     `title`              varchar(255)          NOT NULL,
     `content`            text                  NULL,
@@ -44,15 +60,6 @@ CREATE TABLE `task`
     primary key (`task_id`),
     foreign key (`milestone_id`) references milestone (milestone_id) on delete set null,
     foreign key (`project_id`) references project (project_id) on delete cascade
-);
-
-CREATE TABLE `milestone`
-(
-    `milestone_id`   BigInt AUTO_INCREMENT NOT NULL,
-    `project_id`     BigInt                NOT NULL,
-    `milestone_name` varchar(20)           NOT NULL,
-    primary key (milestone_id),
-    foreign key (`project_id`) references project (`project_id`) on delete cascade
 );
 
 CREATE TABLE `tag`

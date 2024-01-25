@@ -1,4 +1,4 @@
-package com.nhnacademy.minidooray.taskapi.controller.entity;
+package com.nhnacademy.minidooray.taskapi.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -6,8 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "comment")
 public class Comment {
     @Id
     @Column(name = "comment_id")

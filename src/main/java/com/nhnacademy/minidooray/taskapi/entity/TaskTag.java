@@ -1,4 +1,4 @@
-package com.nhnacademy.minidooray.taskapi.controller.entity;
+package com.nhnacademy.minidooray.taskapi.entity;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -8,11 +8,14 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
 @Entity
+@Table(name = "task_tag")
 public class TaskTag {
     @EmbeddedId
     private Pk pk;
