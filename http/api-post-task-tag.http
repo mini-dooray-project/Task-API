@@ -1,0 +1,7 @@
+POST http://localhost:8070/api/tasks/tags
+Content-Type: application/json
+
+{
+  "tagId": 1,
+  "taskId": 11
+}

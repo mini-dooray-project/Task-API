@@ -5,12 +5,14 @@ import com.nhnacademy.minidooray.taskapi.domain.TaskRequest;
 import com.nhnacademy.minidooray.taskapi.entity.Milestone;
 import com.nhnacademy.minidooray.taskapi.entity.Project;
 import com.nhnacademy.minidooray.taskapi.entity.Task;
+import com.nhnacademy.minidooray.taskapi.entity.TaskTag;
 import com.nhnacademy.minidooray.taskapi.exception.MilestoneNotExistException;
 import com.nhnacademy.minidooray.taskapi.exception.ProjectNotExistException;
 import com.nhnacademy.minidooray.taskapi.exception.TaskNotExistException;
 import com.nhnacademy.minidooray.taskapi.repository.MilestoneRepository;
 import com.nhnacademy.minidooray.taskapi.repository.ProjectRepository;
 import com.nhnacademy.minidooray.taskapi.repository.TaskRepository;
+import com.nhnacademy.minidooray.taskapi.repository.TaskTagRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -57,6 +59,7 @@ public class TaskServiceImpl implements TaskService {
                 registerRequest.getRegistrantAccount(), LocalDateTime.now(), registerRequest.getExpireDate(),
                 milestone.orElse(null), project.get());
         taskRepository.save(task);
+
         return new TaskResponse().entityToDto(task);
     }
 

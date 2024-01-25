@@ -9,8 +9,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -30,6 +32,8 @@ public class TaskTag {
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
+    @NoArgsConstructor
+    @AllArgsConstructor
     @EqualsAndHashCode
     @Setter
     @Getter
@@ -39,5 +43,19 @@ public class TaskTag {
         private Long tagId;
         @Column(name = "task_id")
         private Long taskId;
+    }
+
+    public TaskTag updateTaskTag(Long tagId) {
+        this.pk.tagId = tagId;
+        return this;
+    }
+
+    public TaskTag(Pk pk, Task task, Tag tag) {
+        this.pk = pk;
+        this.task = task;
+        this.tag = tag;
+    }
+
+    public TaskTag() {
     }
 }
