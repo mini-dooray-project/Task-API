@@ -1,7 +1,7 @@
 package com.nhnacademy.minidooray.taskapi.controller;
 
 import com.nhnacademy.minidooray.taskapi.domain.DeleteResponse;
-import com.nhnacademy.minidooray.taskapi.domain.ProjectDto;
+import com.nhnacademy.minidooray.taskapi.domain.ProjectResponse;
 import com.nhnacademy.minidooray.taskapi.domain.ProjectRequest;
 import com.nhnacademy.minidooray.taskapi.service.ProjectService;
 import java.util.List;
@@ -27,24 +27,24 @@ public class ProjectRestController {
     }
 
     @GetMapping
-    public List<ProjectDto> getProjects() {
+    public List<ProjectResponse> getProjects() {
         return projectService.getProjects();
     }
 
     @GetMapping("/{projectId}")
-    public ProjectDto getProject(@PathVariable Long projectId) {
+    public ProjectResponse getProject(@PathVariable Long projectId) {
         return projectService.getProject(projectId);
     }
 
     @PostMapping
-    public ResponseEntity<ProjectDto> createProject(@RequestBody ProjectRequest projectRequest) {
-        ProjectDto project = projectService.createProject(projectRequest);
+    public ResponseEntity<ProjectResponse> createProject(@RequestBody ProjectRequest projectRequest) {
+        ProjectResponse project = projectService.createProject(projectRequest);
         return new ResponseEntity<>(project, HttpStatus.CREATED);
     }
 
     @PutMapping("/{projectId}")
-    public ResponseEntity<ProjectDto> updateProject(@PathVariable Long projectId, @RequestBody ProjectRequest projectRequest) {
-        ProjectDto project = projectService.updateProject(projectId, projectRequest);
+    public ResponseEntity<ProjectResponse> updateProject(@PathVariable Long projectId, @RequestBody ProjectRequest projectRequest) {
+        ProjectResponse project = projectService.updateProject(projectId, projectRequest);
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 

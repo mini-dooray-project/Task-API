@@ -1,6 +1,6 @@
 package com.nhnacademy.minidooray.taskapi.service;
 
-import com.nhnacademy.minidooray.taskapi.domain.TaskDto;
+import com.nhnacademy.minidooray.taskapi.domain.TaskResponse;
 import com.nhnacademy.minidooray.taskapi.domain.TaskRequest;
 import com.nhnacademy.minidooray.taskapi.entity.Milestone;
 import com.nhnacademy.minidooray.taskapi.entity.Project;
@@ -31,18 +31,18 @@ public class TaskServiceImpl implements TaskService {
         this.projectRepository = projectRepository;
     }
 
-    public List<TaskDto> getTasks() {
+    public List<TaskResponse> getTasks() {
         return taskRepository.findAllBy();
     }
 
     @Override
-    public TaskDto getTask(Long taskId) {
+    public TaskResponse getTask(Long taskId) {
         return taskRepository.findByTaskId(taskId);
     }
 
     @Override
     @Transactional
-    public TaskDto createTask(TaskRequest registerRequest) {
+    public TaskResponse createTask(TaskRequest registerRequest) {
         Optional<Milestone> milestone = Optional.empty();
         if (Objects.nonNull(registerRequest.getMilestoneId())) {
             milestone = milestoneRepository.findById(registerRequest.getMilestoneId());
@@ -57,12 +57,12 @@ public class TaskServiceImpl implements TaskService {
                 registerRequest.getRegistrantAccount(), LocalDateTime.now(), registerRequest.getExpireDate(),
                 milestone.orElse(null), project.get());
         taskRepository.save(task);
-        return new TaskDto().entityToDto(task);
+        return new TaskResponse().entityToDto(task);
     }
 
     @Override
     @Transactional
-    public TaskDto updateTask(Long taskId, TaskRequest taskRequest) {
+    public TaskResponse updateTask(Long taskId, TaskRequest taskRequest) {
         Optional<Task> byId = taskRepository.findById(taskId);
         if (byId.isEmpty()) {
             throw new TaskNotExistException("업무가 존재하지 않습니다.");
@@ -85,7 +85,7 @@ public class TaskServiceImpl implements TaskService {
                 taskRequest.getTitle(), taskRequest.getContent(), taskRequest.getRegistrantAccount(),
                 taskRequest.getExpireDate(), milestone.orElse(null), project.get());
 
-        return new TaskDto().entityToDto(updatedTask);
+        return new TaskResponse().entityToDto(updatedTask);
     }
 
     @Override

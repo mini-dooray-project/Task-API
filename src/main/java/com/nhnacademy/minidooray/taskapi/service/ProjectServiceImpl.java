@@ -1,6 +1,6 @@
 package com.nhnacademy.minidooray.taskapi.service;
 
-import com.nhnacademy.minidooray.taskapi.domain.ProjectDto;
+import com.nhnacademy.minidooray.taskapi.domain.ProjectResponse;
 import com.nhnacademy.minidooray.taskapi.domain.ProjectRequest;
 import com.nhnacademy.minidooray.taskapi.entity.Project;
 import com.nhnacademy.minidooray.taskapi.exception.ProjectNotExistException;
@@ -25,12 +25,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectDto> getProjects() {
+    public List<ProjectResponse> getProjects() {
         return projectRepository.findAllBy();
     }
 
     @Override
-    public ProjectDto getProject(Long projectId) {
+    public ProjectResponse getProject(Long projectId) {
         if (Objects.isNull(projectRepository.findByProjectId(projectId))) {
             throw new ProjectNotExistException("프로젝트가 존재하지 않습니다.");
         }
@@ -39,7 +39,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public ProjectDto createProject(ProjectRequest projectRequest) {
+    public ProjectResponse createProject(ProjectRequest projectRequest) {
         if (statusRepository.findById(projectRequest.getStatusId()).isEmpty()) {
             throw new ProjectStatusNotExistException("프로젝트 상태가 존재하지 않습니다.");
         }
@@ -47,12 +47,12 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = new Project(statusRepository.findById(projectRequest.getStatusId()).get(),
                 projectRequest.getProjectName());
         projectRepository.save(project);
-        return new ProjectDto().entityToDto(project);
+        return new ProjectResponse().entityToDto(project);
     }
 
     @Override
     @Transactional
-    public ProjectDto updateProject(Long productId, ProjectRequest projectRequest) {
+    public ProjectResponse updateProject(Long productId, ProjectRequest projectRequest) {
         if (statusRepository.findById(projectRequest.getStatusId()).isEmpty()) {
             throw new ProjectStatusNotExistException("프로젝트 상태가 존재하지 않습니다.");
         }
@@ -65,7 +65,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = byId.get().updateProject(projectRequest.getProjectName(),
                 statusRepository.findById(projectRequest.getStatusId()).get());
 
-        return new ProjectDto().entityToDto(project);
+        return new ProjectResponse().entityToDto(project);
     }
 
     @Override

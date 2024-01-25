@@ -1,7 +1,7 @@
 package com.nhnacademy.minidooray.taskapi.controller;
 
 import com.nhnacademy.minidooray.taskapi.domain.DeleteResponse;
-import com.nhnacademy.minidooray.taskapi.domain.TaskDto;
+import com.nhnacademy.minidooray.taskapi.domain.TaskResponse;
 import com.nhnacademy.minidooray.taskapi.domain.TaskRequest;
 import com.nhnacademy.minidooray.taskapi.service.TaskService;
 import java.util.List;
@@ -28,25 +28,25 @@ public class TaskRestController {
     }
 
     @GetMapping
-    public List<TaskDto> getTasks() {
+    public List<TaskResponse> getTasks() {
         return taskService.getTasks();
     }
 
     @GetMapping("/{taskId}")
-    public TaskDto getTask(@PathVariable Long taskId) {
+    public TaskResponse getTask(@PathVariable Long taskId) {
         return taskService.getTask(taskId);
     }
 
     @PostMapping
-    public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskRequest taskRequest) {
-        TaskDto taskDto = taskService.createTask(taskRequest);
-        return new ResponseEntity<>(taskDto, HttpStatus.CREATED);
+    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskRequest taskRequest) {
+        TaskResponse taskResponse = taskService.createTask(taskRequest);
+        return new ResponseEntity<>(taskResponse, HttpStatus.CREATED);
     }
 
     @PutMapping("/{taskId}")
-    public ResponseEntity<TaskDto> updateTask(@PathVariable Long taskId, @Valid @RequestBody TaskRequest taskRequest) {
-        TaskDto taskDto = taskService.updateTask(taskId, taskRequest);
-        return new ResponseEntity<>(taskDto, HttpStatus.OK);
+    public ResponseEntity<TaskResponse> updateTask(@PathVariable Long taskId, @Valid @RequestBody TaskRequest taskRequest) {
+        TaskResponse taskResponse = taskService.updateTask(taskId, taskRequest);
+        return new ResponseEntity<>(taskResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{taskId}")

@@ -5,12 +5,12 @@ import lombok.Getter;
 
 
 @Getter
-public class ProjectDto {
+public class ProjectResponse {
     private Long projectId;
     private Long statusId;
     private String projectName;
 
-    public ProjectDto entityToDto(Project project) {
+    public ProjectResponse entityToDto(Project project) {
         this.projectId = project.getProjectId();
         this.projectName = project.getProjectName();
         this.statusId = project.getProjectStatus().getStatusId();
@@ -18,12 +18,12 @@ public class ProjectDto {
         return this;
     }
 
-    public ProjectDto(Long projectId, Long statusId, String projectName) {
+    public ProjectResponse(Long projectId, Long statusId, String projectName) {
         this.projectId = projectId;
         this.statusId = statusId;
         this.projectName = projectName;
     }
 
-    public ProjectDto() {
+    public ProjectResponse() {
     }
 }

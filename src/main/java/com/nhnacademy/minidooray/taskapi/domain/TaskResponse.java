@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskDto {
+public class TaskResponse {
     private Long taskId;
     private String title;
     private String content;
@@ -23,7 +23,7 @@ public class TaskDto {
     private Long projectId;
     private Long milestoneId;
 
-    public TaskDto entityToDto(Task task) {
+    public TaskResponse entityToDto(Task task) {
         this.taskId = task.getTaskId();
         this.content = task.getContent();
         this.title = task.getTitle();
