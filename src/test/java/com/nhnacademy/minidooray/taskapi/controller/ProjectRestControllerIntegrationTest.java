@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@Transactional
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProjectRestControllerIntegrationTest {
 
@@ -46,6 +45,7 @@ class ProjectRestControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
     void createProject() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
 
@@ -59,6 +59,7 @@ class ProjectRestControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
     void updateProject() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
 
@@ -72,6 +73,7 @@ class ProjectRestControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
     void deleteProject() throws Exception {
         mockMvc.perform(delete("/api/projects/{projectId}", 8L))
                 .andExpect(status().isOk())
@@ -81,6 +83,7 @@ class ProjectRestControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
     void createProjectValidationTest() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
 
@@ -92,6 +95,7 @@ class ProjectRestControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
     void updateProjectValidationTest() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
 

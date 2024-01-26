@@ -7,6 +7,7 @@ import com.nhnacademy.minidooray.taskapi.service.TagService;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -36,9 +38,9 @@ public class TagRestController {
     public TagResponse getTag(@PathVariable Long tagId) {
         return tagService.getTag(tagId);
     }
-    //TODO task에 대해 tag를 갖고 오기
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public TagResponse createTag(@Valid@RequestBody TagRequest tagRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationException();
@@ -47,6 +49,7 @@ public class TagRestController {
     }
 
     @PutMapping("/{tagId}")
+    @ResponseStatus(HttpStatus.OK)
     public TagResponse updateTag(@PathVariable Long tagId, @Valid @RequestBody TagRequest tagRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationException();
@@ -55,6 +58,7 @@ public class TagRestController {
     }
 
     @DeleteMapping("/{tagId}")
+    @ResponseStatus(HttpStatus.OK)
     public DeleteResponse deleteTag(@PathVariable Long tagId) {
         tagService.deleteTag(tagId);
         return new DeleteResponse("OK");

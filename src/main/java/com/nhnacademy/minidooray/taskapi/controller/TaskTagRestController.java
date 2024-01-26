@@ -4,10 +4,13 @@ package com.nhnacademy.minidooray.taskapi.controller;
 import com.nhnacademy.minidooray.taskapi.domain.DeleteResponse;
 import com.nhnacademy.minidooray.taskapi.domain.TaskTagModifyRequest;
 import com.nhnacademy.minidooray.taskapi.domain.TaskTagDto;
+import com.nhnacademy.minidooray.taskapi.domain.TaskTagResponse;
 import com.nhnacademy.minidooray.taskapi.service.TaskTagService;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,6 +27,13 @@ public class TaskTagRestController {
     public TaskTagRestController(TaskTagService taskTagService) {
         this.taskTagService = taskTagService;
     }
+
+
+    @GetMapping("/tasks/{taskId}/tags")
+    public List<TaskTagResponse> getTaskTagByTaskId(@PathVariable Long taskId) {
+        return taskTagService.getTaskTagByTaskId(taskId);
+    }
+
 
     @PostMapping("/tasks/tags")
     public ResponseEntity<TaskTagDto> createTaskTag(@RequestBody

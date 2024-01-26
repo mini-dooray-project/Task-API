@@ -87,19 +87,19 @@ class TaskTagRestControllerIntegrationTest {
                 .andExpect(jsonPath("$.tagId", equalTo(2)));
 
     }
-//
-//    @Test
-//    @DisplayName("프로젝트 태그에 없는 태그 아이디가 들어온 경우 테스트")
-//    void updateTaskTagByTagFailTest() throws Exception {
-//        ObjectMapper mapper = new ObjectMapper();
-//        TaskTagDto taskTagDto = new TaskTagDto(11L, 3L);
-//
-//        mockMvc.perform(put("/api/tasks/{taskId}/tags/{targetTagId}", 11, 1)
-//                        .content(mapper.writeValueAsString(taskTagDto))
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isBadRequest());
-//
-//    }
+
+    @Test
+    @DisplayName("프로젝트 태그에 없는 태그 아이디가 들어온 경우 테스트")
+    void updateTaskTagByTagFailTest() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        TaskTagDto taskTagDto = new TaskTagDto(11L, 3L);
+
+        mockMvc.perform(put("/api/tasks/{taskId}/tags/{targetTagId}", 11, 1)
+                        .content(mapper.writeValueAsString(taskTagDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+    }
 
     @Test
     @DisplayName("등록되지 않은 업무에 태그를 등록한 경우 테스트")

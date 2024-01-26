@@ -2,6 +2,7 @@ package com.nhnacademy.minidooray.taskapi.controller;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.Test;
@@ -12,10 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-@Transactional
 @AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 class TagRestControllerIntegrationTest {
+
     @Autowired
     MockMvc mockMvc;
 
@@ -39,14 +40,27 @@ class TagRestControllerIntegrationTest {
     }
 
     @Test
-    void createTag() {
+    @Transactional
+    void createTag() throws Exception {
+
+
+
+//        mockMvc.perform(post("/api/tags")
+//                .content()
+//                .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isCreated())
+//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//                .andExpect()
+
     }
 
     @Test
+    @Transactional
     void updateTag() {
     }
 
     @Test
+    @Transactional
     void deleteTag() {
     }
 }

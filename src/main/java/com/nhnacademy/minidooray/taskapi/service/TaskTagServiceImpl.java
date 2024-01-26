@@ -2,6 +2,7 @@ package com.nhnacademy.minidooray.taskapi.service;
 
 import com.nhnacademy.minidooray.taskapi.domain.TaskTagDto;
 import com.nhnacademy.minidooray.taskapi.domain.TaskTagModifyRequest;
+import com.nhnacademy.minidooray.taskapi.domain.TaskTagResponse;
 import com.nhnacademy.minidooray.taskapi.entity.Tag;
 import com.nhnacademy.minidooray.taskapi.entity.Task;
 import com.nhnacademy.minidooray.taskapi.entity.TaskTag;
@@ -12,6 +13,7 @@ import com.nhnacademy.minidooray.taskapi.exception.TaskTagNotExistException;
 import com.nhnacademy.minidooray.taskapi.repository.TagRepository;
 import com.nhnacademy.minidooray.taskapi.repository.TaskRepository;
 import com.nhnacademy.minidooray.taskapi.repository.TaskTagRepository;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,15 @@ public class TaskTagServiceImpl implements TaskTagService {
         this.taskTagRepository = taskTagRepository;
         this.taskRepository = taskRepository;
         this.tagRepository = tagRepository;
+    }
+
+    @Override
+    public List<TaskTagResponse> getTaskTagByTaskId(Long taskId) {
+        if (!taskRepository.existsById(taskId)) {
+            throw new TaskNotExistException();
+        }
+
+        return taskTagRepository.findByTask_TaskId(taskId);
     }
 
     @Override

@@ -31,7 +31,7 @@ class TaskRestControllerIntegrationTest {
         mockMvc.perform(get("/api/tasks"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].taskId", equalTo(11)))
+                .andExpect(jsonPath("$[0].taskId", equalTo(16)))
                 .andExpect(jsonPath("$[0].content", equalTo("test")));
     }
 
@@ -92,7 +92,7 @@ class TaskRestControllerIntegrationTest {
     @Test
     @Order(6)
     @DisplayName("validation 테스트")
-    void createTaskValidationExcepitionTest() throws Exception {
+    void createTaskValidationExceptionTest() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
 
         TaskRequest taskRequest = new TaskRequest(null, 1L, "", "integration Test", "testUser", null);
