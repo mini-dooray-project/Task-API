@@ -2,6 +2,7 @@ package com.nhnacademy.minidooray.taskapi.controller;
 
 
 import com.nhnacademy.minidooray.taskapi.domain.DeleteResponse;
+import com.nhnacademy.minidooray.taskapi.domain.TaskTagModifyRequest;
 import com.nhnacademy.minidooray.taskapi.domain.TaskTagDto;
 import com.nhnacademy.minidooray.taskapi.service.TaskTagService;
 import org.springframework.http.HttpStatus;
@@ -25,16 +26,18 @@ public class TaskTagRestController {
     }
 
     @PostMapping("/tasks/tags")
-    public ResponseEntity<TaskTagDto> createTaskTag(@RequestBody TaskTagDto taskTagDto) {
+    public ResponseEntity<TaskTagDto> createTaskTag(@RequestBody
+                                                    TaskTagDto taskTagDto) {
         TaskTagDto taskTag = taskTagService.createTaskTag(taskTagDto);
         return new ResponseEntity<>(taskTag, HttpStatus.CREATED);
     }
 
     @PutMapping("/tasks/{taskId}/tags/{targetTagId}")
     public ResponseEntity<TaskTagDto> updateTaskTagByTag(@PathVariable Long taskId, @PathVariable Long targetTagId,
-                                                         @RequestBody TaskTagDto taskTagDto) {
+                                                         @RequestBody
+                                                                     TaskTagModifyRequest modifyRequest) {
         // Tag를 업데이트합니다
-        TaskTagDto taskTag = taskTagService.updateTaskTagByTag(taskId, targetTagId, taskTagDto);
+        TaskTagDto taskTag = taskTagService.updateTaskTagByTag(taskId, targetTagId, modifyRequest);
         return new ResponseEntity<>(taskTag, HttpStatus.OK);
     }
 

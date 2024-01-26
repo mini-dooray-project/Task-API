@@ -1,0 +1,6 @@
+PUT http://localhost:8070/api/members/user1/projects/1
+Content-Type: application/json
+
+{
+  "authorityId": 2
+}

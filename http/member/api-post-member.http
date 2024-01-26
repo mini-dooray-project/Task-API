@@ -1,0 +1,8 @@
+POST http://localhost:8070/api/members
+Content-Type: application/json
+
+{
+  "memberId": "user2",
+  "projectId": 1,
+  "authorityId": 1
+}

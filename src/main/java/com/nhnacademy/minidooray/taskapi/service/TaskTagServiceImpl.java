@@ -1,6 +1,7 @@
 package com.nhnacademy.minidooray.taskapi.service;
 
 import com.nhnacademy.minidooray.taskapi.domain.TaskTagDto;
+import com.nhnacademy.minidooray.taskapi.domain.TaskTagModifyRequest;
 import com.nhnacademy.minidooray.taskapi.entity.Tag;
 import com.nhnacademy.minidooray.taskapi.entity.Task;
 import com.nhnacademy.minidooray.taskapi.entity.TaskTag;
@@ -12,6 +13,7 @@ import com.nhnacademy.minidooray.taskapi.repository.TagRepository;
 import com.nhnacademy.minidooray.taskapi.repository.TaskRepository;
 import com.nhnacademy.minidooray.taskapi.repository.TaskTagRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TaskTagServiceImpl implements TaskTagService {
@@ -28,6 +30,7 @@ public class TaskTagServiceImpl implements TaskTagService {
     }
 
     @Override
+    @Transactional
     public TaskTagDto createTaskTag(TaskTagDto taskTagDto) {
         TaskTag.Pk pk = new TaskTag.Pk(taskTagDto.getTagId(), taskTagDto.getTaskId());
 
@@ -45,21 +48,33 @@ public class TaskTagServiceImpl implements TaskTagService {
     }
 
     @Override
-    public TaskTagDto updateTaskTagByTag(Long taskId, Long targetTagId, TaskTagDto taskTagDto) {
+    @Transactional
+    public TaskTagDto updateTaskTagByTag(Long taskId, Long targetTagId, TaskTagModifyRequest taskTagModifyRequest) {
+        if (!taskRepository.existsById(taskId)) {
+            throw new TaskNotExistException();
+        }
+        if (!tagRepository.existsById(targetTagId)) {
+            throw new TagNotExistException();
+        }
+        if (!tagRepository.existsById(taskTagModifyRequest.getTagId())) {
+            throw new TagNotExistException();
+        }
+
         TaskTag byId = taskTagRepository.findById(new TaskTag.Pk(targetTagId, taskId))
                 .orElseThrow(TaskTagNotExistException::new);
 
-        TaskTag taskTag = byId.updateTaskTag(taskTagDto.getTagId());
+        TaskTag taskTag = byId.updateTaskTag(taskTagModifyRequest.getTagId());
 
         return new TaskTagDto().entityToDto(taskTag);
     }
 
     @Override
+    @Transactional
     public void deleteTaskTag(Long taskId, Long targetTagId) {
-        if (taskRepository.existsById(taskId)) {
+        if (!taskRepository.existsById(taskId)) {
             throw new TaskNotExistException();
         }
-        if (tagRepository.existsById(targetTagId)) {
+        if (!tagRepository.existsById(targetTagId)) {
             throw new TagNotExistException();
         }
 
