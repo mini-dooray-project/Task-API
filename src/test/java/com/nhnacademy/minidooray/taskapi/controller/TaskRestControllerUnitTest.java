@@ -82,8 +82,11 @@ class TaskRestControllerUnitTest {
     @DisplayName("업무 수정")
     void updateTask() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        TaskRequest taskRequest = new TaskRequest(null, 1L, "changeTitle", "change content Test", "testUser", null);
-        mockMvc.perform(put("/api/tasks/{taskId}", 11L)
+        TaskRequest taskRequest = new TaskRequest(null, 1L, "testTitle", "contentTest", "testUser", null);
+        TaskResponse taskResponse = new TaskResponse(1L, "changeTitle", "changeContentTest", "testUser", null, null, 1L, 1L);
+
+        given(taskService.updateTask(1L, taskRequest)).willReturn(taskResponse);
+        mockMvc.perform(put("/api/tasks/{taskId}", 1L)
                         .content(mapper.writeValueAsString(taskRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

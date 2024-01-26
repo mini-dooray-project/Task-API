@@ -2,9 +2,9 @@ package com.nhnacademy.minidooray.taskapi.domain;
 
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class TaskRequest {
     Long milestoneId;
     Long projectId;
