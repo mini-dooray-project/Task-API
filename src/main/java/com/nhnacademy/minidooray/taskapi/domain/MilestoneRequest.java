@@ -10,5 +10,5 @@ public class MilestoneRequest {
     @NotBlank
     private String milestoneName;
     private LocalDateTime startDate;
-    private LocalDateTime expireDate;
+    private LocalDateTime milestoneExpireDate;
 }

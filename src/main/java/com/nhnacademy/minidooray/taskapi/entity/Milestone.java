@@ -29,23 +29,23 @@ public class Milestone {
     @Column(name = "start_date")
     private LocalDateTime startDate;
     @Column(name = "expire_date")
-    private LocalDateTime expireDate;
+    private LocalDateTime milestoneExpireDate;
 
     public Milestone updateMilestone(Project project, String milestoneName, LocalDateTime startDate,
-                                     LocalDateTime expireDate) {
+                                     LocalDateTime milestoneExpireDate) {
         this.project = project;
         this.milestoneName = milestoneName;
         this.startDate = startDate;
-        this.expireDate = expireDate;
+        this.milestoneExpireDate = milestoneExpireDate;
 
         return this;
     }
 
-    public Milestone(Project project, String milestoneName, LocalDateTime startDate, LocalDateTime expireDate) {
+    public Milestone(Project project, String milestoneName, LocalDateTime startDate, LocalDateTime milestoneExpireDate) {
         this.project = project;
         this.milestoneName = milestoneName;
         this.startDate = startDate;
-        this.expireDate = expireDate;
+        this.milestoneExpireDate = milestoneExpireDate;
     }
 
     public Milestone() {

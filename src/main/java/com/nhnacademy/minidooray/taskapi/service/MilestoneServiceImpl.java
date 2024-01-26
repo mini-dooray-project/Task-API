@@ -44,7 +44,7 @@ public class MilestoneServiceImpl implements MilestoneService {
                 .orElseThrow(ProjectNotExistException::new);
         Milestone milestone =
                 new Milestone(project, milestoneRequest.getMilestoneName(), milestoneRequest.getStartDate(),
-                        milestoneRequest.getExpireDate());
+                        milestoneRequest.getMilestoneExpireDate());
         milestoneRepository.save(milestone);
         return new MilestoneResponse().entityToDto(milestone);
     }
@@ -58,7 +58,7 @@ public class MilestoneServiceImpl implements MilestoneService {
                 .orElseThrow(ProjectNotExistException::new);
 
         Milestone updatedMilestone = prevMilestone.updateMilestone(project, milestoneRequest.getMilestoneName(),
-                milestoneRequest.getStartDate(), milestoneRequest.getExpireDate());
+                milestoneRequest.getStartDate(), milestoneRequest.getMilestoneExpireDate());
 
         return new MilestoneResponse().entityToDto(updatedMilestone);
     }

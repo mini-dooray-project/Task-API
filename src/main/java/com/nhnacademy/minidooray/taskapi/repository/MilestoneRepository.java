@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface MilestoneRepository extends JpaRepository<Milestone, Long> {
-    @Query("select new com.nhnacademy.minidooray.taskapi.domain.MilestoneResponse(m.milestoneId, m.project.projectId, m.milestoneName, m.startDate, m.expireDate) from Milestone m")
+    @Query("select new com.nhnacademy.minidooray.taskapi.domain.MilestoneResponse(m.milestoneId, m.project.projectId, m.milestoneName, m.startDate, m.milestoneExpireDate) from Milestone m")
     List<MilestoneResponse> findAllBy();
 
-    @Query("select new com.nhnacademy.minidooray.taskapi.domain.MilestoneResponse(m.milestoneId, m.project.projectId, m.milestoneName, m.startDate, m.expireDate) from Milestone m where m.milestoneId=:milestoneId")
+    @Query("select new com.nhnacademy.minidooray.taskapi.domain.MilestoneResponse(m.milestoneId, m.project.projectId, m.milestoneName, m.startDate, m.milestoneExpireDate) from Milestone m where m.milestoneId=:milestoneId")
     MilestoneResponse findByMilestoneId(@Param("milestoneId") Long milestoneId);
 
 }

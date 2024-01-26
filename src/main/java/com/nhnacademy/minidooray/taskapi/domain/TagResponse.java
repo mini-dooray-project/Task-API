@@ -1,13 +1,14 @@
 package com.nhnacademy.minidooray.taskapi.domain;
 
 import com.nhnacademy.minidooray.taskapi.entity.Tag;
+import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
 public class TagResponse {
-    Long tagId;
-    Long projectId;
-    String tagName;
+    private Long tagId;
+    private Long projectId;
+    private String tagName;
 
     public TagResponse(Long tagId, Long projectId, String tagName) {
         this.tagId = tagId;

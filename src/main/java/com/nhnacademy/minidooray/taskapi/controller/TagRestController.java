@@ -36,6 +36,7 @@ public class TagRestController {
     public TagResponse getTag(@PathVariable Long tagId) {
         return tagService.getTag(tagId);
     }
+    //TODO task에 대해 tag를 갖고 오기
 
     @PostMapping
     public TagResponse createTag(@Valid@RequestBody TagRequest tagRequest, BindingResult bindingResult) {
