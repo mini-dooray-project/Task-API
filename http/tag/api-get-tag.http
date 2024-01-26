@@ -1,0 +1,5 @@
+GET http://localhost:8070/api/tags
+
+###
+
+GET http://localhost:8070/api/tags/1

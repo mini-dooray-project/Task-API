@@ -32,11 +32,11 @@ public class TaskTagServiceImpl implements TaskTagService {
         TaskTag.Pk pk = new TaskTag.Pk(taskTagDto.getTagId(), taskTagDto.getTaskId());
 
         Task task = taskRepository.findById(taskTagDto.getTaskId())
-                .orElseThrow(() -> new TaskNotExistException("업무가 존재하지 않습니다."));
+                .orElseThrow(TaskNotExistException::new);
         Tag tag = tagRepository.findById(taskTagDto.getTagId())
-                .orElseThrow(() -> new TagNotExistException("태그가 존재하지 않습니다."));
+                .orElseThrow(TagNotExistException::new);
         if (taskTagRepository.findById(pk).isPresent()) {
-            throw new TaskTagAlreadyExistException("대응하는 업무-태그가 존재합니다.");
+            throw new TaskTagAlreadyExistException();
         }
 
         TaskTag taskTag = new TaskTag(pk, task, tag);
@@ -47,7 +47,7 @@ public class TaskTagServiceImpl implements TaskTagService {
     @Override
     public TaskTagDto updateTaskTagByTag(Long taskId, Long targetTagId, TaskTagDto taskTagDto) {
         TaskTag byId = taskTagRepository.findById(new TaskTag.Pk(targetTagId, taskId))
-                .orElseThrow(() -> new TaskTagNotExistException("대응하는 업무-태그가 존재하지 않습니다."));
+                .orElseThrow(TaskTagNotExistException::new);
 
         TaskTag taskTag = byId.updateTaskTag(taskTagDto.getTagId());
 
@@ -56,14 +56,17 @@ public class TaskTagServiceImpl implements TaskTagService {
 
     @Override
     public void deleteTaskTag(Long taskId, Long targetTagId) {
+        if (taskRepository.existsById(taskId)) {
+            throw new TaskNotExistException();
+        }
+        if (tagRepository.existsById(targetTagId)) {
+            throw new TagNotExistException();
+        }
+
         TaskTag.Pk pk = new TaskTag.Pk(targetTagId, taskId);
+        TaskTag taskTag = taskTagRepository.findById(pk)
+                .orElseThrow(TaskTagNotExistException::new);
 
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotExistException("업무가 존재하지 않습니다."));
-        Tag tag = tagRepository.findById(targetTagId)
-                .orElseThrow(() -> new TagNotExistException("태그가 존재하지 않습니다."));
-        taskTagRepository.findById(pk).orElseThrow(() -> new TaskTagNotExistException("대응하는 업무-태그가 존재하지 않습니다."));
-
-        taskTagRepository.delete(new TaskTag(pk, task, tag));
+        taskTagRepository.delete(taskTag);
     }
 }

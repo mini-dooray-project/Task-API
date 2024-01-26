@@ -32,20 +32,18 @@ public class MilestoneServiceImpl implements MilestoneService {
     @Override
     public MilestoneResponse getMilestone(Long milestoneId) {
         if (!milestoneRepository.existsById(milestoneId)) {
-            throw new MilestoneNotExistException("마일스톤이 존재하지 않습니다.");
+            throw new MilestoneNotExistException();
         }
-        return milestoneRepository.findByProjectId(milestoneId);
+        return milestoneRepository.findByMilestoneId(milestoneId);
     }
 
     @Override
     @Transactional
     public MilestoneResponse createMilestone(MilestoneRequest milestoneRequest) {
-        Optional<Project> project = projectRepository.findById(milestoneRequest.getProjectId());
-        if (project.isEmpty()) {
-            throw new ProjectNotExistException("프로젝트가 존재하지 않습니다.");
-        }
+        Project project = projectRepository.findById(milestoneRequest.getProjectId())
+                .orElseThrow(ProjectNotExistException::new);
         Milestone milestone =
-                new Milestone(project.get(), milestoneRequest.getMilestoneName(), milestoneRequest.getStartDate(),
+                new Milestone(project, milestoneRequest.getMilestoneName(), milestoneRequest.getStartDate(),
                         milestoneRequest.getExpireDate());
         milestoneRepository.save(milestone);
         return new MilestoneResponse().entityToDto(milestone);
@@ -55,14 +53,11 @@ public class MilestoneServiceImpl implements MilestoneService {
     @Transactional
     public MilestoneResponse updateMilestone(Long milestoneId, MilestoneRequest milestoneRequest) {
         Milestone prevMilestone = milestoneRepository.findById(milestoneId)
-                .orElseThrow(() -> new MilestoneNotExistException("기존의 마일스톤이 존재하지 않습니다."));
-        Optional<Project> project = projectRepository.findById(milestoneRequest.getProjectId());
+                .orElseThrow(MilestoneNotExistException::new);
+        Project project = projectRepository.findById(milestoneRequest.getProjectId())
+                .orElseThrow(ProjectNotExistException::new);
 
-        if (project.isEmpty()) {
-            throw new ProjectNotExistException("프로젝트가 존재하지 않습니다.");
-        }
-
-        Milestone updatedMilestone = prevMilestone.updateMilestone(project.get(), milestoneRequest.getMilestoneName(),
+        Milestone updatedMilestone = prevMilestone.updateMilestone(project, milestoneRequest.getMilestoneName(),
                 milestoneRequest.getStartDate(), milestoneRequest.getExpireDate());
 
         return new MilestoneResponse().entityToDto(updatedMilestone);

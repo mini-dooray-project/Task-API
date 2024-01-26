@@ -4,7 +4,7 @@ Content-Type: application/json
 {
     "title": "testaaaa",
     "content": "test",
-    "registrantAccount": "testUser",
+    "registrantAccount": "",
     "expireDate": "2022-01-23T15:30:00",
     "projectId": 1
 }

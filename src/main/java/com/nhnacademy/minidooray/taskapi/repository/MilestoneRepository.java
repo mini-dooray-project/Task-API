@@ -12,6 +12,6 @@ public interface MilestoneRepository extends JpaRepository<Milestone, Long> {
     List<MilestoneResponse> findAllBy();
 
     @Query("select new com.nhnacademy.minidooray.taskapi.domain.MilestoneResponse(m.milestoneId, m.project.projectId, m.milestoneName, m.startDate, m.expireDate) from Milestone m where m.milestoneId=:milestoneId")
-    MilestoneResponse findByProjectId(@Param("milestoneId") Long milestoneId);
+    MilestoneResponse findByMilestoneId(@Param("milestoneId") Long milestoneId);
 
 }

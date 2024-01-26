@@ -1,24 +1,23 @@
 package com.nhnacademy.minidooray.taskapi.service;
 
-import com.nhnacademy.minidooray.taskapi.domain.TaskResponse;
 import com.nhnacademy.minidooray.taskapi.domain.TaskRequest;
+import com.nhnacademy.minidooray.taskapi.domain.TaskResponse;
 import com.nhnacademy.minidooray.taskapi.entity.Milestone;
 import com.nhnacademy.minidooray.taskapi.entity.Project;
 import com.nhnacademy.minidooray.taskapi.entity.Task;
-import com.nhnacademy.minidooray.taskapi.entity.TaskTag;
 import com.nhnacademy.minidooray.taskapi.exception.MilestoneNotExistException;
 import com.nhnacademy.minidooray.taskapi.exception.ProjectNotExistException;
 import com.nhnacademy.minidooray.taskapi.exception.TaskNotExistException;
 import com.nhnacademy.minidooray.taskapi.repository.MilestoneRepository;
 import com.nhnacademy.minidooray.taskapi.repository.ProjectRepository;
 import com.nhnacademy.minidooray.taskapi.repository.TaskRepository;
-import com.nhnacademy.minidooray.taskapi.repository.TaskTagRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -39,6 +38,9 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskResponse getTask(Long taskId) {
+        if (!taskRepository.existsById(taskId)) {
+            throw new TaskNotExistException();
+        }
         return taskRepository.findByTaskId(taskId);
     }
 
@@ -52,7 +54,7 @@ public class TaskServiceImpl implements TaskService {
         Optional<Project> project = projectRepository.findById(registerRequest.getProjectId());
 
         if (project.isEmpty()) {
-            throw new ProjectNotExistException("프로젝트가 존재하지 않습니다.");
+            throw new ProjectNotExistException();
         }
 
         Task task = new Task(registerRequest.getTitle(), registerRequest.getContent(),
@@ -66,27 +68,22 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public TaskResponse updateTask(Long taskId, TaskRequest taskRequest) {
-        Optional<Task> byId = taskRepository.findById(taskId);
-        if (byId.isEmpty()) {
-            throw new TaskNotExistException("업무가 존재하지 않습니다.");
-        }
+        Task task = taskRepository.findById(taskId).orElseThrow(TaskNotExistException::new);
 
         Optional<Milestone> milestone = Optional.empty();
         if (Objects.nonNull(taskRequest.getMilestoneId())) {
             if (milestoneRepository.findById(taskRequest.getMilestoneId()).isEmpty()) {
-                throw new MilestoneNotExistException("마일스톤이 존재하지 않습니다.");
+                throw new MilestoneNotExistException();
             }
             milestone = milestoneRepository.findById(taskRequest.getMilestoneId());
         }
-        Optional<Project> project = projectRepository.findById(taskRequest.getProjectId());
+        Project project = projectRepository.findById(taskRequest.getProjectId())
+                .orElseThrow(ProjectNotExistException::new);
 
-        if (project.isEmpty()) {
-            throw new ProjectNotExistException("프로젝트가 존재하지 않습니다.");
-        }
 
-        Task updatedTask = byId.get().updateTask(
+        Task updatedTask = task.updateTask(
                 taskRequest.getTitle(), taskRequest.getContent(), taskRequest.getRegistrantAccount(),
-                taskRequest.getExpireDate(), milestone.orElse(null), project.get());
+                taskRequest.getExpireDate(), milestone.orElse(null), project);
 
         return new TaskResponse().entityToDto(updatedTask);
     }
@@ -96,7 +93,7 @@ public class TaskServiceImpl implements TaskService {
     public void deleteTask(Long taskId) {
         Optional<Task> byId = taskRepository.findById(taskId);
         if (byId.isEmpty()) {
-            throw new TaskNotExistException("업무가 존재하지 않습니다.");
+            throw new TaskNotExistException();
         }
 
         taskRepository.deleteById(taskId);

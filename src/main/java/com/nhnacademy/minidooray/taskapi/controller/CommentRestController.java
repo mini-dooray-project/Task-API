@@ -5,8 +5,11 @@ import com.nhnacademy.minidooray.taskapi.domain.CommentResponse;
 import com.nhnacademy.minidooray.taskapi.domain.DeleteResponse;
 import com.nhnacademy.minidooray.taskapi.service.CommentService;
 import java.util.List;
+import javax.validation.Valid;
+import javax.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,14 +35,21 @@ public class CommentRestController {
     }
 
     @PostMapping
-    public ResponseEntity<CommentResponse> createComment(@RequestBody CommentRequest commentRequest) {
+    public ResponseEntity<CommentResponse> createComment(@Valid @RequestBody CommentRequest commentRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException();
+        }
         CommentResponse comment = commentService.createComment(commentRequest);
         return new ResponseEntity<>(comment, HttpStatus.CREATED);
     }
 
     @PutMapping("/{taskId}")
     public ResponseEntity<CommentResponse> updateComment(@PathVariable Long taskId,
-                                                         @RequestBody CommentRequest commentRequest) {
+                                                         @Valid@RequestBody CommentRequest commentRequest,
+                                                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException();
+        }
         CommentResponse comment = commentService.updateComment(taskId, commentRequest);
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
