@@ -3,9 +3,7 @@ package com.nhnacademy.minidooray.taskapi.domain;
 import com.nhnacademy.minidooray.taskapi.entity.Comment;
 import java.time.LocalDateTime;
 import lombok.Getter;
-import lombok.Setter;
 
-@Setter
 @Getter
 public class CommentResponse {
     private Long commentId;

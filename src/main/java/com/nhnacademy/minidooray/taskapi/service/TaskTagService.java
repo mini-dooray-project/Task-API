@@ -1,12 +1,12 @@
 package com.nhnacademy.minidooray.taskapi.service;
 
-import com.nhnacademy.minidooray.taskapi.domain.TaskTagRequest;
+import com.nhnacademy.minidooray.taskapi.domain.TaskTagDto;
 
 public interface TaskTagService {
 
-    TaskTagRequest createTaskTag(TaskTagRequest taskTagRequest);
+    TaskTagDto createTaskTag(TaskTagDto taskTagDto);
 
-    TaskTagRequest updateTaskTagByTag(Long tagId, Long targetTagId, TaskTagRequest taskTagRequest);
+    TaskTagDto updateTaskTagByTag(Long tagId, Long targetTagId, TaskTagDto taskTagDto);
 
     void deleteTaskTag(Long taskId, Long targetTagId);
 }

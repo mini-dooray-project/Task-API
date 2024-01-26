@@ -51,9 +51,10 @@ public class CommentServiceImpl implements CommentService {
         Comment comment =
                 commentRepository.findById(commentId).orElseThrow(() -> new CommentNotExistException("댓글이 존재하지 않습니다."));
 
-        comment.updateComment(task, commentRequest.getRegistrantAccount(), commentRequest.getContent());
+        Comment updatedComment =
+                comment.updateComment(task, commentRequest.getRegistrantAccount(), commentRequest.getContent());
 
-        return new CommentResponse().entityToDto(comment);
+        return new CommentResponse().entityToDto(updatedComment);
     }
 
     @Override

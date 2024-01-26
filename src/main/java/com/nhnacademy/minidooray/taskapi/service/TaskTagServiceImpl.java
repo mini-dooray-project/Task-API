@@ -1,6 +1,6 @@
 package com.nhnacademy.minidooray.taskapi.service;
 
-import com.nhnacademy.minidooray.taskapi.domain.TaskTagRequest;
+import com.nhnacademy.minidooray.taskapi.domain.TaskTagDto;
 import com.nhnacademy.minidooray.taskapi.entity.Tag;
 import com.nhnacademy.minidooray.taskapi.entity.Task;
 import com.nhnacademy.minidooray.taskapi.entity.TaskTag;
@@ -28,12 +28,12 @@ public class TaskTagServiceImpl implements TaskTagService {
     }
 
     @Override
-    public TaskTagRequest createTaskTag(TaskTagRequest taskTagRequest) {
-        TaskTag.Pk pk = new TaskTag.Pk(taskTagRequest.getTagId(), taskTagRequest.getTaskId());
+    public TaskTagDto createTaskTag(TaskTagDto taskTagDto) {
+        TaskTag.Pk pk = new TaskTag.Pk(taskTagDto.getTagId(), taskTagDto.getTaskId());
 
-        Task task = taskRepository.findById(taskTagRequest.getTaskId())
+        Task task = taskRepository.findById(taskTagDto.getTaskId())
                 .orElseThrow(() -> new TaskNotExistException("업무가 존재하지 않습니다."));
-        Tag tag = tagRepository.findById(taskTagRequest.getTagId())
+        Tag tag = tagRepository.findById(taskTagDto.getTagId())
                 .orElseThrow(() -> new TagNotExistException("태그가 존재하지 않습니다."));
         if (taskTagRepository.findById(pk).isPresent()) {
             throw new TaskTagAlreadyExistException("대응하는 업무-태그가 존재합니다.");
@@ -41,17 +41,17 @@ public class TaskTagServiceImpl implements TaskTagService {
 
         TaskTag taskTag = new TaskTag(pk, task, tag);
         taskTagRepository.save(taskTag);
-        return taskTagRequest.entityToDto(taskTag);
+        return taskTagDto.entityToDto(taskTag);
     }
 
     @Override
-    public TaskTagRequest updateTaskTagByTag(Long taskId, Long targetTagId, TaskTagRequest taskTagRequest) {
+    public TaskTagDto updateTaskTagByTag(Long taskId, Long targetTagId, TaskTagDto taskTagDto) {
         TaskTag byId = taskTagRepository.findById(new TaskTag.Pk(targetTagId, taskId))
                 .orElseThrow(() -> new TaskTagNotExistException("대응하는 업무-태그가 존재하지 않습니다."));
 
-        TaskTag taskTag = byId.updateTaskTag(taskTagRequest.getTagId());
+        TaskTag taskTag = byId.updateTaskTag(taskTagDto.getTagId());
 
-        return new TaskTagRequest().entityToDto(taskTag);
+        return new TaskTagDto().entityToDto(taskTag);
     }
 
     @Override
