@@ -73,7 +73,7 @@ class ProjectRestControllerIntegrationTest {
 
     @Test
     void deleteProject() throws Exception {
-        mockMvc.perform(delete("/api/projects/{projectId}", 6L))
+        mockMvc.perform(delete("/api/projects/{projectId}", 8L))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.response", equalTo("OK")));
