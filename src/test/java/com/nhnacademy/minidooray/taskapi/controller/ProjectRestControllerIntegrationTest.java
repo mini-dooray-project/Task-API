@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nhnacademy.minidooray.taskapi.domain.ProjectResponse;
+import com.nhnacademy.minidooray.taskapi.domain.ProjectRequest;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -49,9 +49,9 @@ class ProjectRestControllerIntegrationTest {
     void createProject() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
 
-        ProjectResponse projectResponse = new ProjectResponse(6L, 2L, "create-test");
+        ProjectRequest projectRequest = new ProjectRequest(2L, "create-test");
         mockMvc.perform(post("/api/projects")
-                        .content(mapper.writeValueAsString(projectResponse))
+                        .content(mapper.writeValueAsString(projectRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -62,9 +62,9 @@ class ProjectRestControllerIntegrationTest {
     void updateProject() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
 
-        ProjectResponse projectResponse = new ProjectResponse(7L, 2L, "test");
+        ProjectRequest projectRequest = new ProjectRequest(2L, "test");
         mockMvc.perform(put("/api/projects/{projectId}", 7L)
-                        .content(mapper.writeValueAsString(projectResponse))
+                        .content(mapper.writeValueAsString(projectRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -78,5 +78,27 @@ class ProjectRestControllerIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.response", equalTo("OK")));
 
+    }
+
+    @Test
+    void createProjectValidationTest() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+
+        ProjectRequest projectResponse = new ProjectRequest(2L, "");
+        mockMvc.perform(post("/api/projects")
+                        .content(mapper.writeValueAsString(projectResponse))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateProjectValidationTest() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+
+        ProjectRequest projectRequest = new ProjectRequest(2L, "");
+        mockMvc.perform(put("/api/projects/{projectId}", 7L)
+                        .content(mapper.writeValueAsString(projectRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }

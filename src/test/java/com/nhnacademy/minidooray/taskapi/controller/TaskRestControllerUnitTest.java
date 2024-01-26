@@ -2,12 +2,14 @@ package com.nhnacademy.minidooray.taskapi.controller;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.minidooray.taskapi.domain.TaskRequest;
 import com.nhnacademy.minidooray.taskapi.domain.TaskResponse;
+import com.nhnacademy.minidooray.taskapi.exception.ValidationException;
 import com.nhnacademy.minidooray.taskapi.service.TaskService;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -98,9 +100,29 @@ class TaskRestControllerUnitTest {
     @Order(5)
     @DisplayName("특정 업무 삭제")
     void deleteTask() throws Exception {
-        mockMvc.perform(delete("/api/tasks/{taskId}", 11L))
+        doNothing().when(taskService).deleteTask(1L);
+        mockMvc.perform(delete("/api/tasks/{taskId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.response", equalTo("OK")));
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("validation exception test")
+    void createValidationTest() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+
+        TaskRequest taskRequest = new TaskRequest(null, 1L, " ", "testContent", " ", null);
+
+        TaskResponse taskResponse = new TaskResponse(1L, "testTitle", "testContent", "testUser", null, null, 1L, 1L);
+        given(taskService.createTask(taskRequest)).willThrow(ValidationException.class);
+
+        mockMvc.perform(post("/api/tasks")
+                        .content(mapper.writeValueAsString(taskRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+
     }
 }

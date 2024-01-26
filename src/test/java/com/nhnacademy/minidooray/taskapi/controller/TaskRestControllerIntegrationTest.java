@@ -88,4 +88,19 @@ class TaskRestControllerIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.response", equalTo("OK")));
     }
+
+    @Test
+    @Order(6)
+    @DisplayName("validation 테스트")
+    void createTaskValidationExcepitionTest() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+
+        TaskRequest taskRequest = new TaskRequest(null, 1L, "", "integration Test", "testUser", null);
+        mockMvc.perform(post("/api/tasks")
+                        .content(mapper.writeValueAsString(taskRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+
+    }
 }

@@ -56,10 +56,10 @@ public class TaskTagServiceImpl implements TaskTagService {
 
     @Override
     public void deleteTaskTag(Long taskId, Long targetTagId) {
-        if (taskRepository.existsById(taskId)) {
+        if (!taskRepository.existsById(taskId)) {
             throw new TaskNotExistException();
         }
-        if (tagRepository.existsById(targetTagId)) {
+        if (!tagRepository.existsById(targetTagId)) {
             throw new TagNotExistException();
         }
 
