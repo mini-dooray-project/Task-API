@@ -1,0 +1,6 @@
+GET http://localhost:8070/api/milestones
+
+###
+
+
+GET http://localhost:8070/api/milestones/1

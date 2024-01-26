@@ -1,0 +1,7 @@
+PUT http://localhost:8070/api/tags/3
+Content-Type: application/json
+
+{
+  "projectId": 1,
+  "tagName": "test tag2"
+}

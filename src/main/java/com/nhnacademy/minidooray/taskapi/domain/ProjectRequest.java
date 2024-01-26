@@ -1,10 +1,13 @@
 package com.nhnacademy.minidooray.taskapi.domain;
 
-import lombok.Data;
 
-@Data
+import javax.validation.constraints.NotBlank;
+import lombok.Getter;
+
+@Getter
 public class ProjectRequest {
     private Long statusId;
+    @NotBlank
     private String projectName;
 
     public ProjectRequest() {

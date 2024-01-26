@@ -26,7 +26,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentResponse> getCommentsByTask(Long taskId) {
-        taskRepository.findById(taskId).orElseThrow(() -> new TaskNotExistException("업무가 존재하지 않습니다."));
+        if (!taskRepository.existsById(taskId)) {
+            throw new TaskNotExistException();
+        }
 
         return commentRepository.findByTask_TaskId(taskId);
     }
@@ -35,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentResponse createComment(CommentRequest commentRequest) {
         Task task = taskRepository.findById(commentRequest.getTaskId())
-                .orElseThrow(() -> new TaskNotExistException("업무가 존재하지 않습니다."));
+                .orElseThrow(TaskNotExistException::new);
         Comment comment = new Comment(task, commentRequest.getRegistrantAccount(), LocalDateTime.now(),
                 commentRequest.getContent());
         commentRepository.save(comment);
@@ -47,20 +49,21 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentResponse updateComment(Long commentId, CommentRequest commentRequest) {
         Task task = taskRepository.findById(commentRequest.getTaskId())
-                .orElseThrow(() -> new TaskNotExistException("업무가 존재하지 않습니다."));
+                .orElseThrow(TaskNotExistException::new);
         Comment comment =
-                commentRepository.findById(commentId).orElseThrow(() -> new CommentNotExistException("댓글이 존재하지 않습니다."));
+                commentRepository.findById(commentId).orElseThrow(CommentNotExistException::new);
 
-        comment.updateComment(task, commentRequest.getRegistrantAccount(), commentRequest.getContent());
+        Comment updatedComment =
+                comment.updateComment(task, commentRequest.getRegistrantAccount(), commentRequest.getContent());
 
-        return new CommentResponse().entityToDto(comment);
+        return new CommentResponse().entityToDto(updatedComment);
     }
 
     @Override
     @Transactional
     public void deleteComment(Long commentId) {
         Comment comment =
-                commentRepository.findById(commentId).orElseThrow(() -> new CommentNotExistException("댓글이 존재하지 않습니다."));
+                commentRepository.findById(commentId).orElseThrow(CommentNotExistException::new);
 
         commentRepository.delete(comment);
     }

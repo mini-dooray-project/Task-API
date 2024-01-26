@@ -2,16 +2,17 @@ package com.nhnacademy.minidooray.taskapi.domain;
 
 import com.nhnacademy.minidooray.taskapi.entity.Comment;
 import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
 import lombok.Getter;
-import lombok.Setter;
 
-@Setter
 @Getter
 public class CommentResponse {
     private Long commentId;
     private Long taskId;
+    @NotBlank
     private String registrantAccount;
     private LocalDateTime createdDate;
+    @NotBlank
     private String content;
 
     public CommentResponse entityToDto(Comment comment) {

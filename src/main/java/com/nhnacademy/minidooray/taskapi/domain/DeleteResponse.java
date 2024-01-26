@@ -1,7 +1,6 @@
 package com.nhnacademy.minidooray.taskapi.domain;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class DeleteResponse {

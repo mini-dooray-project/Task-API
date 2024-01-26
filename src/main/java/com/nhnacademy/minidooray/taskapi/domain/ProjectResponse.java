@@ -2,10 +2,7 @@ package com.nhnacademy.minidooray.taskapi.domain;
 
 import com.nhnacademy.minidooray.taskapi.entity.Project;
 import lombok.Getter;
-import lombok.Setter;
 
-
-@Setter
 @Getter
 public class ProjectResponse {
     private Long projectId;

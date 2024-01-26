@@ -6,8 +6,10 @@ import com.nhnacademy.minidooray.taskapi.domain.TaskRequest;
 import com.nhnacademy.minidooray.taskapi.service.TaskService;
 import java.util.List;
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +40,10 @@ public class TaskRestController {
     }
 
     @PostMapping
-    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskRequest taskRequest) {
+    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskRequest taskRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException();
+        }
         TaskResponse taskResponse = taskService.createTask(taskRequest);
         return new ResponseEntity<>(taskResponse, HttpStatus.CREATED);
     }

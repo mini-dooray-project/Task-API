@@ -1,0 +1,9 @@
+PUT http://localhost:8070/api/milestones/6
+Content-Type: application/json
+
+{
+  "projectId": 1,
+  "milestoneName": "test!!!",
+  "startDate": "2022-01-24T15:30:00",
+  "expireDate": "2022-01-25T15:30:00"
+}
