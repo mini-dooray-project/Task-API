@@ -106,7 +106,6 @@ class TagRestControllerUnitTest {
     @Test
     void createTagValidationTest() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-
         given(tagService.createTag(any())).willThrow(ValidationException.class);
 
         mockMvc.perform(post("/api/tags")
@@ -118,7 +117,6 @@ class TagRestControllerUnitTest {
     @Test
     void updateTagValidationTest() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-
         given(tagService.updateTag(anyLong(), any())).willThrow(ValidationException.class);
 
         mockMvc.perform(put("/api/tags/{tagId}", 1)

@@ -37,8 +37,8 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     }
 
     @Override
-    public List<ProjectMemberResponse> getMember(String memberId) {
-        return projectMemberRepository.findByPk_MemberId(memberId);
+    public List<ProjectMemberResponse> getMember(Long projectId) {
+        return projectMemberRepository.findByPk_MemberId(projectId);
     }
 
     @Override

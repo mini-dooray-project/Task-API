@@ -8,7 +8,7 @@ import java.util.List;
 public interface ProjectMemberService {
     List<ProjectMemberResponse> getMembersByProject(Long projectId);
 
-    List<ProjectMemberResponse> getMember(String memberId);
+    List<ProjectMemberResponse> getMember(Long memberId);
 
     ProjectMemberResponse createMember(ProjectMemberRegisterRequest memberRequest);
 
