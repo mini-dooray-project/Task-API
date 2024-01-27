@@ -2,7 +2,7 @@ POST http://localhost:8070/api/tasks
 Content-Type: application/json
 
 {
-    "title": "testaaaa",
+    "title": "",
     "content": "test",
     "registrantAccount": "",
     "expireDate": "2022-01-23T15:30:00",

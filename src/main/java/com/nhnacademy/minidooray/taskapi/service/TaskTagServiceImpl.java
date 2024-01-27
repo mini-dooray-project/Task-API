@@ -64,10 +64,7 @@ public class TaskTagServiceImpl implements TaskTagService {
         if (!taskRepository.existsById(taskId)) {
             throw new TaskNotExistException();
         }
-        if (!tagRepository.existsById(targetTagId)) {
-            throw new TagNotExistException();
-        }
-        if (!tagRepository.existsById(taskTagModifyRequest.getTagId())) {
+        if (!tagRepository.existsById(targetTagId) || !tagRepository.existsById(taskTagModifyRequest.getTagId())) {
             throw new TagNotExistException();
         }
 

@@ -1,5 +1,7 @@
 GET http://localhost:8070/api/tasks
 
 ###
-
 GET http://localhost:8070/api/tasks/16
+
+###
+GET http://localhost:8070/api/tasks/projects/1
