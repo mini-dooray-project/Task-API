@@ -2,12 +2,13 @@ package com.nhnacademy.minidooray.taskapi.service;
 
 import com.nhnacademy.minidooray.taskapi.domain.TaskRequest;
 import com.nhnacademy.minidooray.taskapi.domain.TaskResponse;
+import com.nhnacademy.minidooray.taskapi.domain.TaskResponseByProjectId;
 import java.util.List;
 
 public interface TaskService {
     List<TaskResponse> getTasks();
 
-    List<TaskResponse> getTaskByProjectId(Long projectId);
+    List<TaskResponseByProjectId> getTaskByProjectId(Long projectId);
 
     TaskResponse getTask(Long taskId);
 

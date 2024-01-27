@@ -3,6 +3,7 @@ package com.nhnacademy.minidooray.taskapi.controller;
 import com.nhnacademy.minidooray.taskapi.domain.DeleteResponse;
 import com.nhnacademy.minidooray.taskapi.domain.TaskRequest;
 import com.nhnacademy.minidooray.taskapi.domain.TaskResponse;
+import com.nhnacademy.minidooray.taskapi.domain.TaskResponseByProjectId;
 import com.nhnacademy.minidooray.taskapi.exception.ValidationException;
 import com.nhnacademy.minidooray.taskapi.service.TaskService;
 import java.util.List;
@@ -35,7 +36,7 @@ public class TaskRestController {
     }
 
     @GetMapping("/projects/{projectId}")
-    public List<TaskResponse> getTasksByProjectId(@PathVariable Long projectId) {
+    public List<TaskResponseByProjectId> getTasksByProjectId(@PathVariable Long projectId) {
         return taskService.getTaskByProjectId(projectId);
     }
 

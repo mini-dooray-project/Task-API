@@ -2,6 +2,7 @@ package com.nhnacademy.minidooray.taskapi.service;
 
 import com.nhnacademy.minidooray.taskapi.domain.TaskRequest;
 import com.nhnacademy.minidooray.taskapi.domain.TaskResponse;
+import com.nhnacademy.minidooray.taskapi.domain.TaskResponseByProjectId;
 import com.nhnacademy.minidooray.taskapi.entity.Milestone;
 import com.nhnacademy.minidooray.taskapi.entity.Project;
 import com.nhnacademy.minidooray.taskapi.entity.Task;
@@ -37,7 +38,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskResponse> getTaskByProjectId(Long projectId) {
+    public List<TaskResponseByProjectId> getTaskByProjectId(Long projectId) {
         if (!projectRepository.existsById(projectId)) {
             throw new ProjectNotExistException();
         }

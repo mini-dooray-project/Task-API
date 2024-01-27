@@ -4,9 +4,12 @@ package com.nhnacademy.minidooray.taskapi.controller;
 import com.nhnacademy.minidooray.taskapi.domain.ProjectMemberModifyRequest;
 import com.nhnacademy.minidooray.taskapi.domain.ProjectMemberRegisterRequest;
 import com.nhnacademy.minidooray.taskapi.domain.ProjectMemberResponse;
+import com.nhnacademy.minidooray.taskapi.exception.ValidationException;
 import com.nhnacademy.minidooray.taskapi.service.ProjectMemberService;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +42,10 @@ public class ProjectMemberRestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProjectMemberResponse createMember(@RequestBody ProjectMemberRegisterRequest memberRequest) {
+    public ProjectMemberResponse createMember(@Valid @RequestBody ProjectMemberRegisterRequest memberRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException();
+        }
         return projectMemberService.createMember(memberRequest);
     }
 
