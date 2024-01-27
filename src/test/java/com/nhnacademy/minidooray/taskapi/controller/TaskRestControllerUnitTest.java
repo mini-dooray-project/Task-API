@@ -20,6 +20,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nhnacademy.minidooray.taskapi.domain.ProjectRequest;
 import com.nhnacademy.minidooray.taskapi.domain.TaskRequest;
 import com.nhnacademy.minidooray.taskapi.domain.TaskResponse;
+import com.nhnacademy.minidooray.taskapi.domain.TaskResponseByProjectId;
 import com.nhnacademy.minidooray.taskapi.exception.MilestoneNotExistException;
 import com.nhnacademy.minidooray.taskapi.exception.ProjectNotExistException;
 import com.nhnacademy.minidooray.taskapi.exception.TaskNotExistException;
@@ -83,18 +84,14 @@ class TaskRestControllerUnitTest {
     @Test
     void getTasksByProjectId() throws Exception {
         given(taskService.getTaskByProjectId(anyLong())).willReturn(
-                List.of(new TaskResponse(1L, "testTitle", "test content", "testUser", LocalDateTime.now(),
-                        LocalDateTime.now(), 1L, 1L, "name", LocalDateTime.now(), LocalDateTime.now())));
+                List.of(new TaskResponseByProjectId(1L, "testTitle",  "testUser", "name")));
 
         mockMvc.perform(get("/api/tasks/projects/{projectId}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].taskId", equalTo(1)))
-                .andExpect(jsonPath("$[0].content", equalTo("test content")))
-                .andExpect(jsonPath("$[0].title", equalTo("testTitle")))
+                .andExpect(jsonPath("$[0].taskTitle", equalTo("testTitle")))
                 .andExpect(jsonPath("$[0].registrantAccount", equalTo("testUser")))
-                .andExpect(jsonPath("$[0].projectId", equalTo(1)))
-                .andExpect(jsonPath("$[0].milestoneId", equalTo(1)))
                 .andExpect(jsonPath("$[0].milestoneName", equalTo("name")));
     }
 
