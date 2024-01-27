@@ -60,7 +60,7 @@ class CommentRestControllerTest {
 
         mockMvc.perform(post("/api/comments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CommentRequest())))
+                        .content(objectMapper.writeValueAsString(new CommentRequest(1L, "test", "test"))))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.commentId", equalTo(1)))
@@ -78,7 +78,7 @@ class CommentRestControllerTest {
 
         mockMvc.perform(put("/api/comments/{commentId}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CommentRequest())))
+                        .content(objectMapper.writeValueAsString(new CommentRequest(1L, "test", "test"))))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.commentId", equalTo(1)))
@@ -103,7 +103,7 @@ class CommentRestControllerTest {
 
         mockMvc.perform(post("/api/comments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CommentRequest())))
+                        .content(objectMapper.writeValueAsString(new CommentRequest(1L, "test", "test"))))
                 .andExpect(status().isBadRequest());
     }
 

@@ -1,6 +1,6 @@
 package com.nhnacademy.minidooray.taskapi.controller;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nhnacademy.minidooray.taskapi.domain.MilestoneRequest;
 import com.nhnacademy.minidooray.taskapi.domain.MilestoneResponse;
 import com.nhnacademy.minidooray.taskapi.exception.ValidationException;
@@ -63,26 +64,35 @@ class MilestoneRestControllerTest {
     @Test
     void createMilestone() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
         given(milestoneService.createMilestone(any())).willReturn(
                 new MilestoneResponse(1L, 1L, "name", LocalDateTime.now(), LocalDateTime.now()));
 
-        mockMvc.perform(post("/api/milestones").content(objectMapper.writeValueAsString(new MilestoneRequest()))
-                        .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
+        mockMvc.perform(post("/api/milestones")
+                        .content(objectMapper.writeValueAsString(new MilestoneRequest(1L, "name", LocalDateTime.now(), LocalDateTime.now())))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.milestoneId", equalTo(1))).andExpect(jsonPath("$.projectId", equalTo(1)))
+                .andExpect(jsonPath("$.milestoneId", equalTo(1)))
+                .andExpect(jsonPath("$.projectId", equalTo(1)))
                 .andExpect(jsonPath("$.milestoneName", equalTo("name")));
     }
 
     @Test
     void updateMilestone() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
         given(milestoneService.updateMilestone(anyLong(), any())).willReturn(
                 new MilestoneResponse(1L, 1L, "name", LocalDateTime.now(), LocalDateTime.now()));
 
         mockMvc.perform(put("/api/milestones/{milestoneId}", 1).contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new MilestoneRequest()))).andExpect(status().isOk())
+                        .content(objectMapper.writeValueAsString(new MilestoneRequest(1L, "name", LocalDateTime.now(), LocalDateTime.now()))))
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.milestoneId", equalTo(1))).andExpect(jsonPath("$.projectId", equalTo(1)))
+                .andExpect(jsonPath("$.milestoneId", equalTo(1)))
+                .andExpect(jsonPath("$.projectId", equalTo(1)))
                 .andExpect(jsonPath("$.milestoneName", equalTo("name")));
     }
 

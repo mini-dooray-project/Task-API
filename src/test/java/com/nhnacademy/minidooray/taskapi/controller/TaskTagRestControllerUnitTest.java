@@ -6,16 +6,22 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.minidooray.taskapi.domain.TaskTagDto;
-import com.nhnacademy.minidooray.taskapi.domain.TaskTagModifyRequest;
+import com.nhnacademy.minidooray.taskapi.domain.TaskTagResponse;
 import com.nhnacademy.minidooray.taskapi.exception.TagNotExistException;
 import com.nhnacademy.minidooray.taskapi.exception.TaskNotExistException;
 import com.nhnacademy.minidooray.taskapi.exception.TaskTagNotExistException;
 import com.nhnacademy.minidooray.taskapi.service.TaskTagService;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +39,19 @@ class TaskTagRestControllerUnitTest {
     MockMvc mockMvc;
     @MockBean
     TaskTagService taskTagService;
+
+    @Test
+    void getTaskTagTest() throws Exception {
+        given(taskTagService.getTaskTagByTaskId(anyLong())).willReturn(
+                List.of(new TaskTagResponse(1L, 1L, "task name")));
+
+        mockMvc.perform(get("/api/tasks/{taskId}/tags", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].taskId", equalTo(1)))
+                .andExpect(jsonPath("$[0].tagId", equalTo(1)))
+                .andExpect(jsonPath("$[0].taskName", equalTo("task name")));
+    }
 
     @Test
     void createTaskTagSuccessTest() throws Exception {
