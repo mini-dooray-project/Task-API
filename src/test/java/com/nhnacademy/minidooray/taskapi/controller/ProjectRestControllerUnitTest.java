@@ -33,7 +33,7 @@ class ProjectRestControllerUnitTest {
 
     @Test
     void getProjects() throws Exception {
-        List<ProjectResponse> projectResponses = List.of(new ProjectResponse(1L, 2L, "test"));
+        List<ProjectResponse> projectResponses = List.of(new ProjectResponse(1L, 2L, "test", "test"));
 
         given(projectService.getProjects()).willReturn(projectResponses);
 
@@ -45,7 +45,7 @@ class ProjectRestControllerUnitTest {
 
     @Test
     void getProject() throws Exception {
-        ProjectResponse projectResponse = new ProjectResponse(1L, 2L, "test");
+        ProjectResponse projectResponse = new ProjectResponse(1L, 2L, "test",  "test");
 
         given(projectService.getProject(1L)).willReturn(projectResponse);
 
@@ -59,7 +59,7 @@ class ProjectRestControllerUnitTest {
     @Test
     void createProject() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        ProjectResponse projectResponse = new ProjectResponse(10L, 1L, "test");
+        ProjectResponse projectResponse = new ProjectResponse(10L, 1L, "test",  "test");
         ProjectRequest projectRequest = new ProjectRequest(1L, "test");
 
         given(projectService.createProject(projectRequest)).willReturn(projectResponse);
@@ -77,7 +77,7 @@ class ProjectRestControllerUnitTest {
         ObjectMapper mapper = new ObjectMapper();
 
         ProjectRequest projectRequest = new ProjectRequest(2L, "test");
-        ProjectResponse projectResponse = new ProjectResponse(7L, 2L, "test");
+        ProjectResponse projectResponse = new ProjectResponse(7L, 2L, "test",  "test");
 
         given(projectService.updateProject(7L, projectRequest)).willReturn(projectResponse);
 
@@ -103,7 +103,7 @@ class ProjectRestControllerUnitTest {
     @Test
     void createProjectValidationTest() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        ProjectResponse projectResponse = new ProjectResponse(10L, 1L, "test");
+        ProjectResponse projectResponse = new ProjectResponse(10L, 1L, "test",  "test");
         ProjectRequest projectRequest = new ProjectRequest(1L, "");
 
         given(projectService.createProject(projectRequest)).willReturn(projectResponse);
@@ -118,7 +118,7 @@ class ProjectRestControllerUnitTest {
     void updateProjectValidationTest() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         ProjectRequest projectRequest = new ProjectRequest(2L, "");
-        ProjectResponse projectResponse = new ProjectResponse(7L, 2L, "test");
+        ProjectResponse projectResponse = new ProjectResponse(7L, 2L, "test",  "test");
 
         given(projectService.updateProject(7L, projectRequest)).willReturn(projectResponse);
 

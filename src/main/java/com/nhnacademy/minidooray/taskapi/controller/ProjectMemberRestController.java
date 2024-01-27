@@ -31,6 +31,8 @@ public class ProjectMemberRestController {
         return projectMemberService.getMember(projectId);
     }
 
+
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProjectMemberResponse createMember(@RequestBody ProjectMemberRegisterRequest memberRequest) {

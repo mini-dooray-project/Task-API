@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.minidooray.taskapi.domain.MilestoneRequest;
 import com.nhnacademy.minidooray.taskapi.domain.MilestoneResponse;
+import com.nhnacademy.minidooray.taskapi.exception.ValidationException;
 import com.nhnacademy.minidooray.taskapi.service.MilestoneService;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,59 +40,49 @@ class MilestoneRestControllerTest {
 
     @Test
     void getMilestones() throws Exception {
-        given(milestoneService.getMilestones()).willReturn(List.of(new MilestoneResponse(1L, 1L, "name",
-                LocalDateTime.now(), LocalDateTime.now())));
+        given(milestoneService.getMilestones()).willReturn(
+                List.of(new MilestoneResponse(1L, 1L, "name", LocalDateTime.now(), LocalDateTime.now())));
 
-        mockMvc.perform(get("/api/milestones"))
-                .andExpect(status().isOk())
+        mockMvc.perform(get("/api/milestones")).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].milestoneId", equalTo(1)))
-                .andExpect(jsonPath("$[0].projectId", equalTo(1)))
+                .andExpect(jsonPath("$[0].milestoneId", equalTo(1))).andExpect(jsonPath("$[0].projectId", equalTo(1)))
                 .andExpect(jsonPath("$[0].milestoneName", equalTo("name")));
     }
 
     @Test
     void getMilestone() throws Exception {
-        given(milestoneService.getMilestone(anyLong())).willReturn(new MilestoneResponse(1L, 1L, "name",
-                LocalDateTime.now(), LocalDateTime.now()));
+        given(milestoneService.getMilestone(anyLong())).willReturn(
+                new MilestoneResponse(1L, 1L, "name", LocalDateTime.now(), LocalDateTime.now()));
 
-        mockMvc.perform(get("/api/milestones/{milestoneId", 1))
-                .andExpect(status().isOk())
+        mockMvc.perform(get("/api/milestones/{milestoneId}", 1)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.milestoneId", equalTo(1)))
-                .andExpect(jsonPath("$.projectId", equalTo(1)))
+                .andExpect(jsonPath("$.milestoneId", equalTo(1))).andExpect(jsonPath("$.projectId", equalTo(1)))
                 .andExpect(jsonPath("$.milestoneName", equalTo("name")));
     }
 
     @Test
     void createMilestone() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        given(milestoneService.createMilestone(any())).willReturn(new MilestoneResponse(1L, 1L, "name",
-                LocalDateTime.now(), LocalDateTime.now()));
+        given(milestoneService.createMilestone(any())).willReturn(
+                new MilestoneResponse(1L, 1L, "name", LocalDateTime.now(), LocalDateTime.now()));
 
-        mockMvc.perform(post("/api/milestones/")
-                        .content(objectMapper.writeValueAsString(new MilestoneRequest()))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
+        mockMvc.perform(post("/api/milestones").content(objectMapper.writeValueAsString(new MilestoneRequest()))
+                        .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.milestoneId", equalTo(1)))
-                .andExpect(jsonPath("$.projectId", equalTo(1)))
+                .andExpect(jsonPath("$.milestoneId", equalTo(1))).andExpect(jsonPath("$.projectId", equalTo(1)))
                 .andExpect(jsonPath("$.milestoneName", equalTo("name")));
     }
 
     @Test
     void updateMilestone() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        given(milestoneService.updateMilestone(anyLong(), any())).willReturn(new MilestoneResponse(1L, 1L, "name",
-                LocalDateTime.now(), LocalDateTime.now()));
+        given(milestoneService.updateMilestone(anyLong(), any())).willReturn(
+                new MilestoneResponse(1L, 1L, "name", LocalDateTime.now(), LocalDateTime.now()));
 
-        mockMvc.perform(put("/api/milestones/{milestoneId}", 1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new MilestoneRequest())))
-                .andExpect(status().isOk())
+        mockMvc.perform(put("/api/milestones/{milestoneId}", 1).contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new MilestoneRequest()))).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.milestoneId", equalTo(1)))
-                .andExpect(jsonPath("$.projectId", equalTo(1)))
+                .andExpect(jsonPath("$.milestoneId", equalTo(1))).andExpect(jsonPath("$.projectId", equalTo(1)))
                 .andExpect(jsonPath("$.milestoneName", equalTo("name")));
     }
 
@@ -102,5 +93,24 @@ class MilestoneRestControllerTest {
         mockMvc.perform(delete("/api/milestones/{milestoneId}", 1))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.response", equalTo("OK")));
+    }
+
+    @Test
+    void createMilestoneValidation() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        given(milestoneService.createMilestone(any())).willThrow(ValidationException.class);
+
+        mockMvc.perform(post("/api/milestones").content(objectMapper.writeValueAsString(new MilestoneRequest()))
+                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateMilestoneValidation() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        given(milestoneService.updateMilestone(anyLong(), any())).willThrow(ValidationException.class);
+
+        mockMvc.perform(
+                put("/api/milestones/{milestoneId}", 1).content(objectMapper.writeValueAsString(new MilestoneRequest()))
+                        .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
     }
 }
