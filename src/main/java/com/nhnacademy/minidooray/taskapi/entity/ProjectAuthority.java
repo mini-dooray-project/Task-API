@@ -16,4 +16,12 @@ public class ProjectAuthority {
 
     @Column(name = "authority_name")
     private String authorityName;
+
+    public ProjectAuthority(Long authorityId, String authorityName) {
+        this.authorityId = authorityId;
+        this.authorityName = authorityName;
+    }
+
+    public ProjectAuthority() {
+    }
 }

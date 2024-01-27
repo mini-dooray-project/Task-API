@@ -39,6 +39,11 @@ public class MilestoneRestController {
         return milestoneService.getMilestone(milestoneId);
     }
 
+    @GetMapping("/projects/{projectId}")
+    public List<MilestoneResponse> getMilestoneByProjectId(@PathVariable Long projectId) {
+        return milestoneService.getMilestoneByProjectId(projectId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MilestoneResponse createMilestone(@Valid @RequestBody MilestoneRequest milestoneRequest,

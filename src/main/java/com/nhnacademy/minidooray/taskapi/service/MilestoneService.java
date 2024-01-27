@@ -6,6 +6,9 @@ import java.util.List;
 
 public interface MilestoneService {
     List<MilestoneResponse> getMilestones();
+
+    List<MilestoneResponse> getMilestoneByProjectId(Long projectId);
+
     MilestoneResponse getMilestone(Long milestoneId);
     MilestoneResponse createMilestone(MilestoneRequest request);
 

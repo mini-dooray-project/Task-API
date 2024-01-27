@@ -37,6 +37,15 @@ public class MilestoneServiceImpl implements MilestoneService {
     }
 
     @Override
+    public List<MilestoneResponse> getMilestoneByProjectId(Long projectId) {
+        if (!projectRepository.existsById(projectId)) {
+            throw new ProjectNotExistException();
+        }
+
+        return milestoneRepository.findByProjectId(projectId);
+    }
+
+    @Override
     @Transactional
     public MilestoneResponse createMilestone(MilestoneRequest milestoneRequest) {
         Project project =
