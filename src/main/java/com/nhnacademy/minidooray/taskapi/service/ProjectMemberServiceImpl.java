@@ -36,7 +36,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
         if (!projectMemberRepository.existsByPk_projectId(projectId)) {
             throw new ProjectNotExistException();
         }
-        return projectMemberRepository.findByPk_projectId(projectId);
+        return projectMemberRepository.findByPkProjectId(projectId);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
         if (!projectMemberRepository.existsByPk_memberId(memberId)) {
             throw new MemberNotExistException();
         }
-        return projectMemberRepository.findByPk_memberId(memberId);
+        return projectMemberRepository.findByPkMemberId(memberId);
     }
 
     @Override
