@@ -1,9 +1,11 @@
 package com.nhnacademy.minidooray.taskapi.domain;
 
+import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
 public class ProjectMemberRegisterRequest {
+    @NotBlank
     String memberId;
     Long projectId;
     Long authorityId;

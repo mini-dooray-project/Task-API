@@ -35,7 +35,8 @@ public class CommentRestController {
     }
 
     @PostMapping
-    public ResponseEntity<CommentResponse> createComment(@Valid @RequestBody CommentRequest commentRequest, BindingResult bindingResult) {
+    public ResponseEntity<CommentResponse> createComment(@Valid @RequestBody CommentRequest commentRequest,
+                                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationException();
         }
@@ -45,7 +46,7 @@ public class CommentRestController {
 
     @PutMapping("/{taskId}")
     public ResponseEntity<CommentResponse> updateComment(@PathVariable Long taskId,
-                                                         @Valid@RequestBody CommentRequest commentRequest,
+                                                         @Valid @RequestBody CommentRequest commentRequest,
                                                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationException();
