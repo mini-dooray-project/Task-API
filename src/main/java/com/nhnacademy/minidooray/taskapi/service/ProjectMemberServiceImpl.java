@@ -33,11 +33,17 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 
     @Override
     public List<ProjectMemberResponse> getMembersByProject(Long projectId) {
+        if (!projectMemberRepository.existsByPk_projectId(projectId)) {
+            throw new ProjectNotExistException();
+        }
         return projectMemberRepository.findByPk_projectId(projectId);
     }
 
     @Override
     public List<ProjectMemberResponse> getMemberByMemberId(String memberId) {
+        if (!projectMemberRepository.existsByPk_memberId(memberId)) {
+            throw new MemberNotExistException();
+        }
         return projectMemberRepository.findByPk_MemberId(memberId);
     }
 
