@@ -1,10 +1,12 @@
 package com.nhnacademy.minidooray.taskapi.controller;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -16,6 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.minidooray.taskapi.domain.CommentRequest;
 import com.nhnacademy.minidooray.taskapi.domain.CommentResponse;
+import com.nhnacademy.minidooray.taskapi.exception.CommentNotExistException;
+import com.nhnacademy.minidooray.taskapi.exception.TaskNotExistException;
 import com.nhnacademy.minidooray.taskapi.exception.ValidationException;
 import com.nhnacademy.minidooray.taskapi.service.CommentService;
 import java.time.LocalDateTime;
@@ -53,6 +57,15 @@ class CommentRestControllerTest {
     }
 
     @Test
+    void getCommentsByTask_thenThrowTaskNotExistException() throws Exception {
+        given(commentService.getCommentsByTask(anyLong())).willThrow(TaskNotExistException.class);
+
+        mockMvc.perform(get("/api/comments/{taskId}", 1))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TaskNotExistException));
+    }
+
+    @Test
     void createComment() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         given(commentService.createComment(any())).willReturn(
@@ -69,6 +82,29 @@ class CommentRestControllerTest {
                 .andExpect(jsonPath("$.content", equalTo("content")));
     }
 
+    @Test
+    void createCommentValidationTest() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        given(commentService.createComment(any())).willThrow(ValidationException.class);
+
+        mockMvc.perform(post("/api/comments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CommentRequest())))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException));
+    }
+
+    @Test
+    void createCommentTaskNotExistException() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        given(commentService.createComment(any())).willThrow(TaskNotExistException.class);
+
+        mockMvc.perform(post("/api/comments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CommentRequest(1L, "test", "test"))))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TaskNotExistException));
+    }
 
     @Test
     void updateComment() throws Exception {
@@ -88,6 +124,30 @@ class CommentRestControllerTest {
     }
 
     @Test
+    void updateCommentValidationTest() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        given(commentService.updateComment(anyLong(), any())).willThrow(ValidationException.class);
+
+        mockMvc.perform(put("/api/comments/{commentId}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CommentRequest())))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException));
+    }
+
+    @Test
+    void updateComment_thenThrowCommentNotExistException() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        given(commentService.updateComment(anyLong(), any())).willThrow(CommentNotExistException.class);
+
+        mockMvc.perform(put("/api/comments/{commentId}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CommentRequest(1L, "account", "content"))))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof CommentNotExistException));
+    }
+
+    @Test
     void deleteComment() throws Exception {
         doNothing().when(commentService).deleteComment(anyLong());
 
@@ -97,24 +157,11 @@ class CommentRestControllerTest {
     }
 
     @Test
-    void createCommentValidationTest() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        given(commentService.createComment(any())).willThrow(ValidationException.class);
+    void deleteComment_CommentNotExistException() throws Exception {
+        doThrow(CommentNotExistException.class).when(commentService).deleteComment(anyLong());
 
-        mockMvc.perform(post("/api/comments")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CommentRequest(1L, "test", "test"))))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void updateCommentValidationTest() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        given(commentService.updateComment(anyLong(), any())).willThrow(ValidationException.class);
-
-        mockMvc.perform(put("/api/comments/{commentId}", 1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new CommentRequest())))
-                .andExpect(status().isBadRequest());
+        mockMvc.perform(delete("/api/comments/{commentId}", 1))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof CommentNotExistException));
     }
 }
