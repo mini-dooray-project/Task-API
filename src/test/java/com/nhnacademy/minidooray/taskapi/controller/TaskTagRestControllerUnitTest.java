@@ -1,6 +1,7 @@
 package com.nhnacademy.minidooray.taskapi.controller;
 
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -16,12 +17,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.minidooray.taskapi.domain.TaskTagDto;
+import com.nhnacademy.minidooray.taskapi.domain.TaskTagModifyRequest;
 import com.nhnacademy.minidooray.taskapi.domain.TaskTagResponse;
 import com.nhnacademy.minidooray.taskapi.exception.TagNotExistException;
 import com.nhnacademy.minidooray.taskapi.exception.TaskNotExistException;
+import com.nhnacademy.minidooray.taskapi.exception.TaskTagAlreadyExistException;
 import com.nhnacademy.minidooray.taskapi.exception.TaskTagNotExistException;
 import com.nhnacademy.minidooray.taskapi.service.TaskTagService;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +45,7 @@ class TaskTagRestControllerUnitTest {
     TaskTagService taskTagService;
 
     @Test
-    void getTaskTagTest() throws Exception {
+    void getTaskTagByTaskIdTest() throws Exception {
         given(taskTagService.getTaskTagByTaskId(anyLong())).willReturn(
                 List.of(new TaskTagResponse(1L, 1L, "task name")));
 
@@ -54,10 +58,21 @@ class TaskTagRestControllerUnitTest {
     }
 
     @Test
+    void getTaskTagByTaskIdTest_thenThrowTaskNotExistException() throws Exception {
+        given(taskTagService.getTaskTagByTaskId(anyLong())).willThrow(TaskNotExistException.class);
+
+        mockMvc.perform(get("/api/tasks/{taskId}/tags", 1))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TaskNotExistException));
+    }
+
+    @Test
     void createTaskTagSuccessTest() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         TaskTagDto taskTagDto = new TaskTagDto(12L, 1L);
+
         given(taskTagService.createTaskTag(taskTagDto)).willReturn(taskTagDto);
+
         mockMvc.perform(post("/api/tasks/tags")
                         .content(mapper.writeValueAsString(taskTagDto))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -69,32 +84,36 @@ class TaskTagRestControllerUnitTest {
 
     @Test
     @DisplayName("해당 프로젝트에 없는 태그를 사용한 경우")
-    void createTaskTagFailTest() throws Exception {
+    void createTaskTagFailTest_thenThrowTagNotExistException() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         TaskTagDto taskTagDto = new TaskTagDto(11L, 12L);
+
         given(taskTagService.createTaskTag(taskTagDto)).willThrow(TaskNotExistException.class);
+
         mockMvc.perform(post("/api/tasks/tags")
                         .content(mapper.writeValueAsString(taskTagDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TaskNotExistException));
     }
 
     @Test
     @DisplayName("업무에 동일한 태그를 사용한 경우")
-    void createTaskTagFailTest2() throws Exception {
+    void createTaskTagFailTest_thenThrowTaskTagAlreadyExistException() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         TaskTagDto taskTagDto = new TaskTagDto(11L, 1L);
 
-        given(taskTagService.createTaskTag(taskTagDto)).willThrow(TaskNotExistException.class);
+        given(taskTagService.createTaskTag(taskTagDto)).willThrow(TaskTagAlreadyExistException.class);
         mockMvc.perform(post("/api/tasks/tags")
                         .content(mapper.writeValueAsString(taskTagDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TaskTagAlreadyExistException));
     }
 
     @Test
     @DisplayName("등록되지 않는 업무에 태그를 사용한 경우")
-    void createTaskTagFailTest3() throws Exception {
+    void createTaskTagFailTest_thenThrowTaskNotExistException() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         TaskTagDto taskTagDto = new TaskTagDto(20L, 1L);
 
@@ -102,7 +121,8 @@ class TaskTagRestControllerUnitTest {
         mockMvc.perform(post("/api/tasks/tags")
                         .content(mapper.writeValueAsString(taskTagDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TaskNotExistException));
     }
 
     @Test
@@ -113,7 +133,7 @@ class TaskTagRestControllerUnitTest {
         given(taskTagService.updateTaskTagByTag(anyLong(), anyLong(), any())).willReturn(taskTagDto);
 
         mockMvc.perform(put("/api/tasks/{taskId}/tags/{targetTagId}", 11, 1)
-                        .content(mapper.writeValueAsString(taskTagDto))
+                        .content(mapper.writeValueAsString(new TaskTagModifyRequest()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -122,29 +142,42 @@ class TaskTagRestControllerUnitTest {
     }
 
     @Test
-    @DisplayName("프로젝트 태그에 없는 태그 아이디가 들어온 경우 테스트")
-    void updateTaskTagByTagFailTest() throws Exception {
+    @DisplayName("task_tag에 올바른 task-tag 쌍이 부재한 경우")
+    void updateTaskTagByTag_thenThrowTaskTagNotExistException() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        TaskTagDto taskTagDto = new TaskTagDto(11L, 3L);
         given(taskTagService.updateTaskTagByTag(anyLong(), anyLong(), any())).willThrow(TaskTagNotExistException.class);
 
         mockMvc.perform(put("/api/tasks/{taskId}/tags/{targetTagId}", 11, 1)
-                        .content(mapper.writeValueAsString(taskTagDto))
+                        .content(mapper.writeValueAsString(new TaskTagModifyRequest()))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TaskTagNotExistException));
     }
 
     @Test
-    @DisplayName("등록되지 않은 업무에 태그를 등록한 경우 테스트")
-    void updateTaskTagByTagFailTest2() throws Exception {
+    @DisplayName("등록되지 않은 업무를 수정할 경우")
+    void updateTaskTagByTagFailTest_thenThrowTaskNotExistException() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        TaskTagDto taskTagDto = new TaskTagDto(20L, 2L);
-        given(taskTagService.updateTaskTagByTag(anyLong(), anyLong(), any())).willThrow(TaskTagNotExistException.class);
+        given(taskTagService.updateTaskTagByTag(anyLong(), anyLong(), any())).willThrow(TaskNotExistException.class);
 
         mockMvc.perform(put("/api/tasks/{taskId}/tags/{targetTagId}", 20, 2L)
-                        .content(mapper.writeValueAsString(taskTagDto))
+                        .content(mapper.writeValueAsString(new TaskTagModifyRequest()))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TaskNotExistException));
+    }
+
+    @Test
+    @DisplayName("등록되지 않은 태그를 입력 또는 수정할 경우")
+    void updateTaskTagByTagFailTest_thenThrowTagNotExistException() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        given(taskTagService.updateTaskTagByTag(anyLong(), anyLong(), any())).willThrow(TagNotExistException.class);
+
+        mockMvc.perform(put("/api/tasks/{taskId}/tags/{targetTagId}", 20, 2L)
+                        .content(mapper.writeValueAsString(new TaskTagModifyRequest()))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TagNotExistException));
     }
 
 
@@ -160,21 +193,30 @@ class TaskTagRestControllerUnitTest {
 
     @Test
     @DisplayName("삭제하려는 태그에 업무가 없는 실패 테스트")
-    @Transactional
     void deleteTaskTagFailTest() throws Exception {
         doThrow(new TaskNotExistException()).when(taskTagService).deleteTaskTag(anyLong(), anyLong());
 
         mockMvc.perform(delete("/api/tasks/{taskId}/tags/{targetTagId}", 20, 1))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TaskNotExistException));
     }
 
     @Test
-    @Transactional
     @DisplayName("삭제하려는 태그가 없는 실패 테스트")
-    void deleteTaskTagFailTest3() throws Exception {
+    void deleteTaskTagFailTest_thenThrowTagNotExistException() throws Exception {
         doThrow(new TagNotExistException()).when(taskTagService).deleteTaskTag(anyLong(), anyLong());
 
         mockMvc.perform(delete("/api/tasks/{taskId}/tags/{targetTagId}", 11, 3))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TagNotExistException));
+    }
+
+    @Test
+    void deleteTaskTag_thenThrowTaskTagNotExistException() throws Exception {
+        doThrow(new TaskTagNotExistException()).when(taskTagService).deleteTaskTag(anyLong(), anyLong());
+
+        mockMvc.perform(delete("/api/tasks/{taskId}/tags/{targetTagId}", 11, 3))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TaskTagNotExistException));
     }
 }
