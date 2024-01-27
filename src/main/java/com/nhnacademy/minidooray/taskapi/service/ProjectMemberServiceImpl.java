@@ -44,7 +44,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
         if (!projectMemberRepository.existsByPk_memberId(memberId)) {
             throw new MemberNotExistException();
         }
-        return projectMemberRepository.findByPk_MemberId(memberId);
+        return projectMemberRepository.findByPk_memberId(memberId);
     }
 
     @Override

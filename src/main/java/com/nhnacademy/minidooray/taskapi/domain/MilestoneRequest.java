@@ -2,7 +2,6 @@ package com.nhnacademy.minidooray.taskapi.domain;
 
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter

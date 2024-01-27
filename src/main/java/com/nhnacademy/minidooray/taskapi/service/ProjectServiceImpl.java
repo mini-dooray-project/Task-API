@@ -9,8 +9,6 @@ import com.nhnacademy.minidooray.taskapi.exception.ProjectStatusNotExistExceptio
 import com.nhnacademy.minidooray.taskapi.repository.ProjectRepository;
 import com.nhnacademy.minidooray.taskapi.repository.ProjectStatusRepository;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

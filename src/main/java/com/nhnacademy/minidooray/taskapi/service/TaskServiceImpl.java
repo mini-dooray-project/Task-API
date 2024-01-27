@@ -37,6 +37,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<TaskResponse> getTaskByProjectId(Long projectId) {
+        if (!projectRepository.existsById(projectId)) {
+            throw new ProjectNotExistException();
+        }
+        return taskRepository.findByProjectId(projectId);
+    }
+
+    @Override
     public TaskResponse getTask(Long taskId) {
         if (!taskRepository.existsById(taskId)) {
             throw new TaskNotExistException();

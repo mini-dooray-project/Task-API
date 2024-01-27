@@ -1,6 +1,5 @@
 package com.nhnacademy.minidooray.taskapi.repository;
 
-import com.nhnacademy.minidooray.taskapi.domain.MilestoneResponse;
 import com.nhnacademy.minidooray.taskapi.domain.TagResponse;
 import com.nhnacademy.minidooray.taskapi.entity.Tag;
 import java.util.List;

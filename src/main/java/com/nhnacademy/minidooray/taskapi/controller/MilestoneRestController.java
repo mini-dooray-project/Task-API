@@ -3,10 +3,10 @@ package com.nhnacademy.minidooray.taskapi.controller;
 import com.nhnacademy.minidooray.taskapi.domain.DeleteResponse;
 import com.nhnacademy.minidooray.taskapi.domain.MilestoneRequest;
 import com.nhnacademy.minidooray.taskapi.domain.MilestoneResponse;
+import com.nhnacademy.minidooray.taskapi.exception.ValidationException;
 import com.nhnacademy.minidooray.taskapi.service.MilestoneService;
 import java.util.List;
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +41,8 @@ public class MilestoneRestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public MilestoneResponse createMilestone(@Valid @RequestBody MilestoneRequest milestoneRequest, BindingResult bindingResult) {
+    public MilestoneResponse createMilestone(@Valid @RequestBody MilestoneRequest milestoneRequest,
+                                             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationException();
         }
@@ -50,7 +51,7 @@ public class MilestoneRestController {
 
     @PutMapping("/{milestoneId}")
     public MilestoneResponse updateMilestone(@PathVariable Long milestoneId,
-                                             @Valid@RequestBody MilestoneRequest milestoneRequest,
+                                             @Valid @RequestBody MilestoneRequest milestoneRequest,
                                              BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationException();

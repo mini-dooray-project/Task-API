@@ -37,7 +37,7 @@ public class TaskTagServiceImpl implements TaskTagService {
             throw new TaskNotExistException();
         }
 
-        return taskTagRepository.findByTask_TaskId(taskId);
+        return taskTagRepository.findByTask_taskId(taskId);
     }
 
     @Override

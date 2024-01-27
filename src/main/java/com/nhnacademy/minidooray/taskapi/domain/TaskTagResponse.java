@@ -13,7 +13,4 @@ public class TaskTagResponse {
         this.tagId = tagId;
         this.taskName = taskName;
     }
-
-    public TaskTagResponse() {
-    }
 }

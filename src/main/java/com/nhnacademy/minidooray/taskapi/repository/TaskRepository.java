@@ -13,4 +13,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<TaskResponse> findAllBy();
     @Query("select new com.nhnacademy.minidooray.taskapi.domain.TaskResponse(t.taskId, t.title, t.content, t.registrantAccount, t.createdDate, t.expireDate, t.project.projectId, t.milestone.milestoneId, t.milestone.milestoneName, t.milestone.startDate, t.milestone.milestoneExpireDate) from Task t left join t.milestone m where t.taskId=:taskId")
     TaskResponse findByTaskId(@Param("taskId") Long taskId);
+
+    @Query("select new com.nhnacademy.minidooray.taskapi.domain.TaskResponse(t.taskId, t.title, t.content, t.registrantAccount, t.createdDate, t.expireDate, t.project.projectId, t.milestone.milestoneId, t.milestone.milestoneName, t.milestone.startDate, t.milestone.milestoneExpireDate) from Task t left join t.milestone m where t.project.projectId=:projectId")
+    List<TaskResponse> findByProjectId(@Param("projectId") Long projectId);
 }

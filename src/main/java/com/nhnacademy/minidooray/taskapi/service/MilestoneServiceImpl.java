@@ -9,7 +9,6 @@ import com.nhnacademy.minidooray.taskapi.exception.ProjectNotExistException;
 import com.nhnacademy.minidooray.taskapi.repository.MilestoneRepository;
 import com.nhnacademy.minidooray.taskapi.repository.ProjectRepository;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,8 +39,8 @@ public class MilestoneServiceImpl implements MilestoneService {
     @Override
     @Transactional
     public MilestoneResponse createMilestone(MilestoneRequest milestoneRequest) {
-        Project project = projectRepository.findById(milestoneRequest.getProjectId())
-                .orElseThrow(ProjectNotExistException::new);
+        Project project =
+                projectRepository.findById(milestoneRequest.getProjectId()).orElseThrow(ProjectNotExistException::new);
         Milestone milestone =
                 new Milestone(project, milestoneRequest.getMilestoneName(), milestoneRequest.getStartDate(),
                         milestoneRequest.getMilestoneExpireDate());
@@ -52,10 +51,10 @@ public class MilestoneServiceImpl implements MilestoneService {
     @Override
     @Transactional
     public MilestoneResponse updateMilestone(Long milestoneId, MilestoneRequest milestoneRequest) {
-        Milestone prevMilestone = milestoneRepository.findById(milestoneId)
-                .orElseThrow(MilestoneNotExistException::new);
-        Project project = projectRepository.findById(milestoneRequest.getProjectId())
-                .orElseThrow(ProjectNotExistException::new);
+        Milestone prevMilestone =
+                milestoneRepository.findById(milestoneId).orElseThrow(MilestoneNotExistException::new);
+        Project project =
+                projectRepository.findById(milestoneRequest.getProjectId()).orElseThrow(ProjectNotExistException::new);
 
         Milestone updatedMilestone = prevMilestone.updateMilestone(project, milestoneRequest.getMilestoneName(),
                 milestoneRequest.getStartDate(), milestoneRequest.getMilestoneExpireDate());
@@ -66,6 +65,7 @@ public class MilestoneServiceImpl implements MilestoneService {
     @Override
     @Transactional
     public void deleteMilestone(Long milestoneId) {
-        milestoneRepository.deleteById(milestoneId);
+        Milestone milestone = milestoneRepository.findById(milestoneId).orElseThrow(MilestoneNotExistException::new);
+        milestoneRepository.delete(milestone);
     }
 }

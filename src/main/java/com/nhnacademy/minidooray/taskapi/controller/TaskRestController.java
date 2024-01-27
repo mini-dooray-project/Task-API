@@ -1,12 +1,12 @@
 package com.nhnacademy.minidooray.taskapi.controller;
 
 import com.nhnacademy.minidooray.taskapi.domain.DeleteResponse;
-import com.nhnacademy.minidooray.taskapi.domain.TaskResponse;
 import com.nhnacademy.minidooray.taskapi.domain.TaskRequest;
+import com.nhnacademy.minidooray.taskapi.domain.TaskResponse;
+import com.nhnacademy.minidooray.taskapi.exception.ValidationException;
 import com.nhnacademy.minidooray.taskapi.service.TaskService;
 import java.util.List;
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -34,13 +34,19 @@ public class TaskRestController {
         return taskService.getTasks();
     }
 
+    @GetMapping("/projects/{projectId}")
+    public List<TaskResponse> getTasksByProjectId(@PathVariable Long projectId) {
+        return taskService.getTaskByProjectId(projectId);
+    }
+
     @GetMapping("/{taskId}")
     public TaskResponse getTask(@PathVariable Long taskId) {
         return taskService.getTask(taskId);
     }
 
     @PostMapping
-    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskRequest taskRequest, BindingResult bindingResult) {
+    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskRequest taskRequest,
+                                                   BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationException();
         }
@@ -49,7 +55,12 @@ public class TaskRestController {
     }
 
     @PutMapping("/{taskId}")
-    public ResponseEntity<TaskResponse> updateTask(@PathVariable Long taskId, @Valid @RequestBody TaskRequest taskRequest) {
+    public ResponseEntity<TaskResponse> updateTask(@PathVariable Long taskId,
+                                                   @Valid @RequestBody TaskRequest taskRequest,
+                                                   BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException();
+        }
         TaskResponse taskResponse = taskService.updateTask(taskId, taskRequest);
         return new ResponseEntity<>(taskResponse, HttpStatus.OK);
     }

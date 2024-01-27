@@ -1,7 +1,6 @@
 package com.nhnacademy.minidooray.taskapi.domain;
 
 import com.nhnacademy.minidooray.taskapi.entity.Tag;
-import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter

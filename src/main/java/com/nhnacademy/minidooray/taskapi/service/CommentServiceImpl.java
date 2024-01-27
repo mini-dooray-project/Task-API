@@ -30,7 +30,7 @@ public class CommentServiceImpl implements CommentService {
             throw new TaskNotExistException();
         }
 
-        return commentRepository.findByTask_TaskId(taskId);
+        return commentRepository.findByTask_taskId(taskId);
     }
 
     @Override

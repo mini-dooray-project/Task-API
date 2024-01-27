@@ -23,4 +23,7 @@ public class TaskRequest {
         this.registrantAccount = registrantAccount;
         this.expireDate = expireDate;
     }
+
+    public TaskRequest() {
+    }
 }

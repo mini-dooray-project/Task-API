@@ -9,11 +9,11 @@ public class TagRequest {
     @NotBlank
     String tagName;
 
-    public TagRequest() {
-    }
-
     public TagRequest(Long projectId, String tagName) {
         this.projectId = projectId;
         this.tagName = tagName;
+    }
+
+    public TagRequest() {
     }
 }
