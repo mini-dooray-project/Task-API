@@ -37,10 +37,12 @@ class ProjectServiceImplTest {
     }
 
     @Test
-    void getProject() {
+    void getProject_thenReturnProjectNotExistException() {
+        Long projectId = 1L;
+
         when(projectRepository.existsById(anyLong())).thenReturn(false);
 
-        assertThrows(ProjectNotExistException.class, () -> projectService.getProject(anyLong()));
+        assertThrows(ProjectNotExistException.class, () -> projectService.getProject(projectId));
         verify(projectRepository, times(1)).existsById(anyLong());
     }
 }
