@@ -1,9 +1,12 @@
 package com.nhnacademy.minidooray.taskapi.controller;
 
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -13,14 +16,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.nhnacademy.minidooray.taskapi.domain.ProjectRequest;
 import com.nhnacademy.minidooray.taskapi.domain.TaskRequest;
 import com.nhnacademy.minidooray.taskapi.domain.TaskResponse;
+import com.nhnacademy.minidooray.taskapi.exception.MilestoneNotExistException;
+import com.nhnacademy.minidooray.taskapi.exception.ProjectNotExistException;
+import com.nhnacademy.minidooray.taskapi.exception.TaskNotExistException;
 import com.nhnacademy.minidooray.taskapi.exception.ValidationException;
 import com.nhnacademy.minidooray.taskapi.service.TaskService;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -40,7 +47,6 @@ class TaskRestControllerUnitTest {
     TaskService taskService;
 
     @Test
-    @Order(1)
     @DisplayName("task 목록 가져오기")
     void getTasks() throws Exception {
         given(taskService.getTasks()).willReturn(
@@ -54,7 +60,6 @@ class TaskRestControllerUnitTest {
     }
 
     @Test
-    @Order(2)
     @DisplayName("{taskId}번째 task 가져오기")
     void getTask() throws Exception {
         given(taskService.getTask(1L)).willReturn(
@@ -68,7 +73,41 @@ class TaskRestControllerUnitTest {
     }
 
     @Test
-    @Order(3)
+    void getTask_thenThrowTaskNotExistException() throws Exception {
+        given(taskService.getTask(1L)).willThrow(TaskNotExistException.class);
+
+        mockMvc.perform(get("/api/tasks/{taskId}", 1L)).andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TaskNotExistException));
+    }
+
+    @Test
+    void getTasksByProjectId() throws Exception {
+        given(taskService.getTaskByProjectId(anyLong())).willReturn(
+                List.of(new TaskResponse(1L, "testTitle", "test content", "testUser", LocalDateTime.now(),
+                        LocalDateTime.now(), 1L, 1L, "name", LocalDateTime.now(), LocalDateTime.now())));
+
+        mockMvc.perform(get("/api/tasks/projects/{projectId}", 1L))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].taskId", equalTo(1)))
+                .andExpect(jsonPath("$[0].content", equalTo("test content")))
+                .andExpect(jsonPath("$[0].title", equalTo("testTitle")))
+                .andExpect(jsonPath("$[0].registrantAccount", equalTo("testUser")))
+                .andExpect(jsonPath("$[0].projectId", equalTo(1)))
+                .andExpect(jsonPath("$[0].milestoneId", equalTo(1)))
+                .andExpect(jsonPath("$[0].milestoneName", equalTo("name")));
+    }
+
+    @Test
+    void getTasksByProjectId_thenThrowProjectNotExistException() throws Exception {
+        given(taskService.getTaskByProjectId(anyLong())).willThrow(ProjectNotExistException.class);
+
+        mockMvc.perform(get("/api/tasks/projects/{projectId}", 1L))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ProjectNotExistException));
+    }
+
+    @Test
     @DisplayName("task 등록하기")
     void createTask() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
@@ -88,7 +127,32 @@ class TaskRestControllerUnitTest {
     }
 
     @Test
-    @Order(4)
+    @DisplayName("validation exception test")
+    void createValidationTest() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+
+        given(taskService.createTask(any())).willThrow(ValidationException.class);
+
+        mockMvc.perform(post("/api/tasks").content(mapper.writeValueAsString(new ProjectRequest()))
+                        .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException));
+    }
+
+    @Test
+    void createTest_thenThrowProjectNotExistException() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
+        given(taskService.createTask(any())).willThrow(ProjectNotExistException.class);
+
+        mockMvc.perform(post("/api/tasks").content(
+                                mapper.writeValueAsString(new TaskRequest(1L, 1L, "title", "content", "account", LocalDateTime.now())))
+                        .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ProjectNotExistException));
+    }
+
+
+    @Test
     @DisplayName("task 수정")
     void updateTask() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
@@ -105,7 +169,42 @@ class TaskRestControllerUnitTest {
     }
 
     @Test
-    @Order(5)
+    void updateTask_thenThrowValidationException() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        given(taskService.updateTask(anyLong(), any())).willThrow(ValidationException.class);
+        mockMvc.perform(put("/api/tasks/{taskId}", 1).content(objectMapper.writeValueAsString(new TaskRequest()))
+                        .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException));
+    }
+
+    @Test
+    void updateTask_thenThrowMilestoneNotExistException() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        given(taskService.updateTask(anyLong(), any())).willThrow(MilestoneNotExistException.class);
+
+
+        mockMvc.perform(put("/api/tasks/{taskId}", 1L).content(objectMapper.writeValueAsString(
+                                new TaskRequest(1L, 1L, "title", "content", "account", LocalDateTime.now())))
+                        .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MilestoneNotExistException));
+    }
+
+    @Test
+    void updateTask_thenThrowProjectNotExistException() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        given(taskService.updateTask(anyLong(), any())).willThrow(ProjectNotExistException.class);
+
+
+        mockMvc.perform(put("/api/tasks/{taskId}", 1L).content(objectMapper.writeValueAsString(
+                                new TaskRequest(1L, 1L, "title", "content", "account", LocalDateTime.now())))
+                        .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ProjectNotExistException));
+    }
+
+    @Test
     @DisplayName("task 삭제")
     void deleteTask() throws Exception {
         doNothing().when(taskService).deleteTask(1L);
@@ -115,15 +214,11 @@ class TaskRestControllerUnitTest {
     }
 
     @Test
-    @Order(6)
-    @DisplayName("validation exception test")
-    void createValidationTest() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        TaskRequest taskRequest = new TaskRequest(null, 1L, " ", "testContent", " ", null);
+    void deleteTask_thenThrowTaskNotExistException() throws Exception {
+        doThrow(TaskNotExistException.class).when(taskService).deleteTask(anyLong());
 
-        given(taskService.createTask(taskRequest)).willThrow(ValidationException.class);
-
-        mockMvc.perform(post("/api/tasks").content(mapper.writeValueAsString(taskRequest))
-                .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+        mockMvc.perform(delete("/api/tasks/{taskId}", 1L)).andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof TaskNotExistException));
     }
+
 }
