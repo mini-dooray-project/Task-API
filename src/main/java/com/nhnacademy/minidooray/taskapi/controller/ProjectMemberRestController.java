@@ -26,11 +26,15 @@ public class ProjectMemberRestController {
         this.projectMemberService = projectMemberService;
     }
 
-    @GetMapping("/{projectId}")
+    @GetMapping("/projects/{projectId}")
     public List<ProjectMemberResponse> getMember(@PathVariable Long projectId) {
-        return projectMemberService.getMember(projectId);
+        return projectMemberService.getMembersByProject(projectId);
     }
 
+    @GetMapping("/{memberId}")
+    public List<ProjectMemberResponse> getMembers(@PathVariable String memberId) {
+        return projectMemberService.getMemberByMemberId(memberId);
+    }
 
 
     @PostMapping

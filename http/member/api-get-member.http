@@ -1,1 +1,5 @@
-GET http://localhost:8070/api/members/1
+GET http://localhost:8070/api/members/user1
+
+###
+
+GET http://localhost:8070/api/members/projects/1

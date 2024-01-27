@@ -33,12 +33,12 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 
     @Override
     public List<ProjectMemberResponse> getMembersByProject(Long projectId) {
-        return null;
+        return projectMemberRepository.findByPk_projectId(projectId);
     }
 
     @Override
-    public List<ProjectMemberResponse> getMember(Long projectId) {
-        return projectMemberRepository.findByPk_MemberId(projectId);
+    public List<ProjectMemberResponse> getMemberByMemberId(String memberId) {
+        return projectMemberRepository.findByPk_MemberId(memberId);
     }
 
     @Override

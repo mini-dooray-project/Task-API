@@ -9,5 +9,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProjectMemberRepository extends JpaRepository<ProjectMember, ProjectMember.Pk> {
     @Query("select new com.nhnacademy.minidooray.taskapi.domain.ProjectMemberResponse(p.pk.memberId, p.project.projectId, p.project.projectName, p.projectAuthority.authorityId, p.projectAuthority.authorityName) from ProjectMember p where p.pk.projectId=:projectId")
-    List<ProjectMemberResponse> findByPk_MemberId(@Param("projectId") Long projectId);
+    List<ProjectMemberResponse> findByPk_projectId(@Param("projectId") Long projectId);
+
+    @Query("select new com.nhnacademy.minidooray.taskapi.domain.ProjectMemberResponse(p.pk.memberId, p.project.projectId, p.project.projectName, p.projectAuthority.authorityId, p.projectAuthority.authorityName) from ProjectMember p where p.pk.memberId=:memberId")
+    List<ProjectMemberResponse> findByPk_MemberId(@Param("memberId") String memberId);
 }
