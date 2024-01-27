@@ -20,7 +20,7 @@ CREATE TABLE `project_status`
 CREATE TABLE `project`
 (
     `project_id`   BigInt AUTO_INCREMENT NOT NULL,
-    `status_id`    BigInt                NULL,
+    `status_id`    BigInt     default 1          NULL,
     `project_name` varchar(100)          NOT NULL,
     primary key (`project_id`),
     foreign key (`status_id`) references project_status (`status_id`) on delete set null
