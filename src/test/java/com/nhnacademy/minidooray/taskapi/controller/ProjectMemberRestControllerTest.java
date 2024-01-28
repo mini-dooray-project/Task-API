@@ -88,6 +88,14 @@ class ProjectMemberRestControllerTest {
     }
 
     @Test
+    void getProjectMemberAuthority() throws Exception {
+        given(projectMemberService.getProjectMemberAuthority(anyString(), anyLong())).willReturn(true);
+
+        mockMvc.perform(get("/api/members/{memberId}/projects/{projectId}", "user", 1))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void createMember() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         given(projectMemberService.createMember(any())).willReturn(

@@ -40,7 +40,7 @@ public class ProjectMemberRestController {
     }
 
     @GetMapping("/{memberId}/projects/{projectId}")
-    public boolean getProjectMemberAuth(@PathVariable String memberId, @PathVariable Long projectId) {
+    public boolean getProjectMemberAuthority(@PathVariable String memberId, @PathVariable Long projectId) {
         return projectMemberService.getProjectMemberAuthority(memberId, projectId);
     }
 

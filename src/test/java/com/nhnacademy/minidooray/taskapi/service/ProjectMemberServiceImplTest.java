@@ -111,6 +111,19 @@ class ProjectMemberServiceImplTest {
     }
 
     @Test
+    void getProjectMemberAuthority() {
+        String memberId = "user";
+        Long projectId = 1L;
+
+        when(projectMemberRepository.findById(any())).thenReturn(Optional.of(new ProjectMember()));
+
+        boolean authority = projectMemberService.getProjectMemberAuthority(memberId, projectId);
+
+        assertEquals(true, authority);
+        verify(projectMemberRepository, times(1)).findById(any());
+    }
+
+    @Test
     void createMember() {
         ProjectMemberRegisterRequest memberRegisterRequest = new ProjectMemberRegisterRequest("user", 1L, 1L);
 
