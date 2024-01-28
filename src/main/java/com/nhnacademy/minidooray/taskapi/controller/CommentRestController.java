@@ -44,20 +44,20 @@ public class CommentRestController {
         return new ResponseEntity<>(comment, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{taskId}")
-    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long taskId,
+    @PutMapping("/{commentId}")
+    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long commentId,
                                                          @Valid @RequestBody CommentRequest commentRequest,
                                                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ValidationException();
         }
-        CommentResponse comment = commentService.updateComment(taskId, commentRequest);
+        CommentResponse comment = commentService.updateComment(commentId, commentRequest);
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{taskId}")
-    public DeleteResponse deleteComment(@PathVariable Long taskId) {
-        commentService.deleteComment(taskId);
+    @DeleteMapping("/{commentId}")
+    public DeleteResponse deleteComment(@PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
         return new DeleteResponse("OK");
     }
 }

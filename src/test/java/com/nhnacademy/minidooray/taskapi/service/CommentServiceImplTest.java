@@ -14,6 +14,7 @@ import com.nhnacademy.minidooray.taskapi.domain.CommentRequest;
 import com.nhnacademy.minidooray.taskapi.domain.CommentResponse;
 import com.nhnacademy.minidooray.taskapi.entity.Comment;
 import com.nhnacademy.minidooray.taskapi.entity.Task;
+import com.nhnacademy.minidooray.taskapi.exception.CommentNotExistException;
 import com.nhnacademy.minidooray.taskapi.exception.TaskNotExistException;
 import com.nhnacademy.minidooray.taskapi.repository.CommentRepository;
 import com.nhnacademy.minidooray.taskapi.repository.TaskRepository;

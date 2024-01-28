@@ -36,6 +36,7 @@ public class ProjectMember {
     @AllArgsConstructor
     @EqualsAndHashCode
     @Getter
+    @Setter
     @Embeddable
     public static class Pk implements Serializable {
         @Column(name = "account_id")
@@ -48,6 +49,9 @@ public class ProjectMember {
         this.pk = pk;
         this.project = project;
         this.projectAuthority = projectAuthority;
+    }
+
+    public ProjectMember() {
     }
 
     public ProjectMember updateProjectMember(ProjectAuthority authority) {
