@@ -12,4 +12,11 @@ public class TaskTagModifyRequest {
 
         return this;
     }
+
+    public TaskTagModifyRequest(Long tagId) {
+        this.tagId = tagId;
+    }
+
+    public TaskTagModifyRequest() {
+    }
 }
