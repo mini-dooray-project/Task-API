@@ -1,6 +1,7 @@
 package com.nhnacademy.minidooray.taskapi.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -37,10 +38,12 @@ class ProjectServiceImplTest {
     }
 
     @Test
-    void getProject() {
+    void getProject_thenReturnProjectNotExistException() {
+        Long projectId = 1L;
+
         when(projectRepository.existsById(anyLong())).thenReturn(false);
 
-        assertThrows(ProjectNotExistException.class, () -> projectService.getProject(anyLong()));
+        assertThrows(ProjectNotExistException.class, () -> projectService.getProject(projectId));
         verify(projectRepository, times(1)).existsById(anyLong());
     }
 }

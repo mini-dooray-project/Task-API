@@ -54,7 +54,7 @@ class ProjectMemberServiceImplTest {
         // mocking
         given(projectMemberRepository.existsByPk_projectId(anyLong()))
                 .willReturn(true);
-        given(projectMemberRepository.findByPk_projectId(anyLong()))
+        given(projectMemberRepository.findByPkProjectId(anyLong()))
                 .willReturn(List.of(createMemberResponse()));
 
         // when
@@ -68,7 +68,7 @@ class ProjectMemberServiceImplTest {
         assertEquals(responses.get(0).getAuthorityId(), memberResponse.getAuthorityId());
         assertEquals(responses.get(0).getAuthorityName(), memberResponse.getAuthorityName());
 
-        verify(projectMemberRepository, times(1)).findByPk_projectId(projectId);
+        verify(projectMemberRepository, times(1)).findByPkProjectId(projectId);
     }
 
     @Test
@@ -87,10 +87,10 @@ class ProjectMemberServiceImplTest {
         String memberId = "user";
 
         given(projectMemberRepository.existsByPk_memberId(anyString())).willReturn(true);
-        given(projectMemberRepository.findByPk_memberId(anyString())).willReturn(List.of(createMemberResponse()));
+        given(projectMemberRepository.findByPkMemberId(anyString())).willReturn(List.of(createMemberResponse()));
 
         List<ProjectMemberResponse> memberByMemberId = projectMemberService.getMemberByMemberId(memberId);
-        List<ProjectMemberResponse> byPkMemberId = projectMemberRepository.findByPk_memberId(memberId);
+        List<ProjectMemberResponse> byPkMemberId = projectMemberRepository.findByPkMemberId(memberId);
 
         assertEquals(memberByMemberId.get(0).getMemberId(), byPkMemberId.get(0).getMemberId());
         assertEquals(memberByMemberId.get(0).getProjectId(), byPkMemberId.get(0).getProjectId());

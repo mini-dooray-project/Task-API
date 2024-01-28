@@ -59,9 +59,11 @@ class MilestoneRestControllerTest {
         given(milestoneService.getMilestone(anyLong())).willReturn(
                 new MilestoneResponse(1L, 1L, "name", LocalDateTime.now(), LocalDateTime.now()));
 
-        mockMvc.perform(get("/api/milestones/{milestoneId}", 1)).andExpect(status().isOk())
+        mockMvc.perform(get("/api/milestones/{milestoneId}", 1))
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.milestoneId", equalTo(1))).andExpect(jsonPath("$.projectId", equalTo(1)))
+                .andExpect(jsonPath("$.milestoneId", equalTo(1)))
+                .andExpect(jsonPath("$.projectId", equalTo(1)))
                 .andExpect(jsonPath("$.milestoneName", equalTo("name")));
     }
 
@@ -69,10 +71,22 @@ class MilestoneRestControllerTest {
     void getMilestone_thenThrowMilestoneNotExistException() throws Exception {
         given(milestoneService.getMilestone(anyLong())).willThrow(MilestoneNotExistException.class);
 
-
         mockMvc.perform(get("/api/milestones/{milestoneId}", 1))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MilestoneNotExistException));
+    }
+
+    @Test
+    void getMilestoneByProjectId() throws Exception {
+        given(milestoneService.getMilestoneByProjectId(anyLong())).willReturn(
+                List.of(new MilestoneResponse(1L, 1L, "name", LocalDateTime.now(), LocalDateTime.now())));
+
+        mockMvc.perform(get("/api/milestones/projects/{projectId}", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].milestoneId", equalTo(1)))
+                .andExpect(jsonPath("$[0].projectId", equalTo(1)))
+                .andExpect(jsonPath("$[0].milestoneName", equalTo("name")));
     }
 
     @Test
@@ -115,8 +129,7 @@ class MilestoneRestControllerTest {
         objectMapper.registerModule(new JavaTimeModule());
 
         mockMvc.perform(post("/api/milestones")
-                        .content(objectMapper.writeValueAsString(
-                                new MilestoneRequest()))
+                        .content(objectMapper.writeValueAsString(new MilestoneRequest()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof ValidationException));

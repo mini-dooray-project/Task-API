@@ -10,5 +10,5 @@ import org.springframework.data.repository.query.Param;
 public interface TaskTagRepository extends JpaRepository<TaskTag, TaskTag.Pk> {
 
     @Query("select new com.nhnacademy.minidooray.taskapi.domain.TaskTagResponse(t.pk.taskId, t.pk.tagId, t.tag.tagName) from TaskTag t where t.pk.taskId=:taskId")
-    List<TaskTagResponse> findByTask_taskId(@Param("taskId") Long taskId);
+    List<TaskTagResponse> findByTaskTaskId(@Param("taskId") Long taskId);
 }
