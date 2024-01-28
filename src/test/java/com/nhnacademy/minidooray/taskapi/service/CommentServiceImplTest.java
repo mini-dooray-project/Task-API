@@ -1,6 +1,8 @@
 package com.nhnacademy.minidooray.taskapi.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
@@ -50,7 +52,7 @@ class CommentServiceImplTest {
     }
 
     @Test
-    void getCommentsByTask_thenThrowTaskNotExistException() throws Exception{
+    void getCommentsByTask_thenThrowTaskNotExistException() throws Exception {
         Long taskId = 1L;
 
         when(taskRepository.existsById(anyLong())).thenReturn(false);
@@ -95,6 +97,6 @@ class CommentServiceImplTest {
 
         commentService.deleteComment(commentId);
 
-        verify(commentRepository, times(1)).delete(any());
+        verify(commentRepository, times(1)).delete(any(Comment.class));
     }
 }
