@@ -39,6 +39,10 @@ public class ProjectMemberRestController {
         return projectMemberService.getMemberByMemberId(memberId);
     }
 
+    @GetMapping("/{memberId}/projects/{projectId}")
+    public boolean getProjectMemberAuth(@PathVariable String memberId, @PathVariable Long projectId) {
+        return projectMemberService.getProjectMemberAuthority(memberId, projectId);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

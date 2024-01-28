@@ -14,4 +14,5 @@ public interface ProjectMemberService {
 
     ProjectMemberResponse updateMember(String memberId, Long projectId, ProjectMemberModifyRequest memberRequest);
 
+    boolean getProjectMemberAuthority(String memberId, Long projectId);
 }

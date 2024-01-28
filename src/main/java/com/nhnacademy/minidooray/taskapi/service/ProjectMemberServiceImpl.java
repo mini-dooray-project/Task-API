@@ -13,6 +13,7 @@ import com.nhnacademy.minidooray.taskapi.repository.ProjectAuthorityRepository;
 import com.nhnacademy.minidooray.taskapi.repository.ProjectMemberRepository;
 import com.nhnacademy.minidooray.taskapi.repository.ProjectRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,7 +65,8 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 
     @Override
     @Transactional
-    public ProjectMemberResponse updateMember(String memberId, Long projectId, ProjectMemberModifyRequest memberRequest) {
+    public ProjectMemberResponse updateMember(String memberId, Long projectId,
+                                              ProjectMemberModifyRequest memberRequest) {
         if (!projectRepository.existsById(projectId)) {
             throw new ProjectNotExistException();
         }
@@ -77,6 +79,12 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
 
         ProjectMember updatedProjectMember = projectMember.updateProjectMember(authority);
         return new ProjectMemberResponse().entityToDto(updatedProjectMember);
+    }
+
+    @Override
+    public boolean getProjectMemberAuthority(String memberId, Long projectId) {
+        Optional<ProjectMember> member = projectMemberRepository.findById(new ProjectMember.Pk(memberId, projectId));
+        return member.isEmpty() ? false : true;
     }
 
 }
