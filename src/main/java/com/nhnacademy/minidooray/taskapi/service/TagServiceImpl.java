@@ -39,6 +39,9 @@ public class TagServiceImpl implements TagService {
     //todo#3
     @Override
     public List<TagResponse> getTagByProjectId(Long projectId) {
+        if (!projectRepository.existsById(projectId)) {
+            throw new ProjectNotExistException();
+        }
 
         return tagRepository.findByProjectId(projectId);
     }
