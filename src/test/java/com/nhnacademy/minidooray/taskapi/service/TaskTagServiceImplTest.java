@@ -139,6 +139,19 @@ class TaskTagServiceImplTest {
         assertThrows(TagNotExistException.class,
                 () -> taskTagService.updateTaskTagByTag(taskId, tagId, modifyRequest));
     }
+    @Test
+    void givenInvalidRequest_whenUpdateTaskTagByTag_thenThrowTagNotExistException() {
+        Long taskId = 1L;
+        Long tagId = 1L;
+        TaskTagModifyRequest modifyRequest = new TaskTagModifyRequest(1L);
+
+        when(taskRepository.existsById(anyLong())).thenReturn(true);
+        when(tagRepository.existsById(anyLong())).thenReturn(true);
+        when(tagRepository.existsById(modifyRequest.getTagId())).thenReturn(false);
+
+        assertThrows(TagNotExistException.class,
+                () -> taskTagService.updateTaskTagByTag(taskId, tagId, modifyRequest));
+    }
 
     @Test
     void deleteTaskTag() {

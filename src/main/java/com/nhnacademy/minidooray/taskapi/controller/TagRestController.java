@@ -31,7 +31,6 @@ public class TagRestController {
         return tagService.getTag(tagId);
     }
 
-    // todo #1
     @GetMapping("/project/{projectId}")
     public List<TagResponse> getTagByProjectId(@PathVariable Long projectId) {
         return tagService.getTagByProjectId(projectId);

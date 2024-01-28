@@ -78,6 +78,17 @@ class TagRestControllerUnitTest {
     }
 
     @Test
+    void getTagByProjectId() throws Exception{
+        given(tagService.getTagByProjectId(anyLong())).willReturn(List.of(new TagResponse(1L, 1L, "java")));
+
+        mockMvc.perform(get("/api/tags/project/{projectId}", 1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].tagId", equalTo(1)))
+                .andExpect(jsonPath("$[0].projectId", equalTo(1)))
+                .andExpect(jsonPath("$[0].tagName", equalTo("java")));
+    }
+
+    @Test
     void createTag() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         TagResponse tagResponse = new TagResponse(1L, 1L, "java");

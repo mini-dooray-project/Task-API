@@ -10,7 +10,6 @@ public interface TagService {
 
     TagResponse getTag(Long tagId);
 
-    // todo#2
     List<TagResponse> getTagByProjectId(Long projectId);
 
     TagResponse createTag(TagRequest tagRequest);

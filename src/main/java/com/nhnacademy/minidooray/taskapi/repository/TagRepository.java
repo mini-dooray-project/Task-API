@@ -14,7 +14,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     @Query("select new com.nhnacademy.minidooray.taskapi.domain.TagResponse(t.tagId, t.project.projectId, t.tagName) from Tag t where t.tagId=:tagId")
     TagResponse findByTagId(@Param("tagId") Long tagId);
 
-    //todo#4
     @Query("select new com.nhnacademy.minidooray.taskapi.domain.TagResponse(t.tagId, t.project.projectId, t.tagName) from Tag t where t.project.projectId=:projectId")
     List<TagResponse> findByProjectId(@Param("projectId") Long projectId);
 
