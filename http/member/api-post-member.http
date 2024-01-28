@@ -2,7 +2,7 @@ POST http://localhost:8070/api/members
 Content-Type: application/json
 
 {
-  "memberId": "user2",
+  "memberId": "user3",
   "projectId": 1,
-  "authorityId": 1
+  "authorityId": 2
 }
