@@ -36,6 +36,13 @@ public class TagServiceImpl implements TagService {
         return tagRepository.findByTagId(tagId);
     }
 
+    //todo#3
+    @Override
+    public List<TagResponse> getTagByProjectId(Long projectId) {
+
+        return tagRepository.findByProjectId(projectId);
+    }
+
     @Override
     @Transactional
     public TagResponse createTag(TagRequest tagRequest) {
