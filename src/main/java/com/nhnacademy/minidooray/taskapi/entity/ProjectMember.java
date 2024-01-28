@@ -35,7 +35,6 @@ public class ProjectMember {
     @NoArgsConstructor
     @AllArgsConstructor
     @EqualsAndHashCode
-    @Setter
     @Getter
     @Embeddable
     public static class Pk implements Serializable {
@@ -49,9 +48,6 @@ public class ProjectMember {
         this.pk = pk;
         this.project = project;
         this.projectAuthority = projectAuthority;
-    }
-
-    public ProjectMember() {
     }
 
     public ProjectMember updateProjectMember(ProjectAuthority authority) {

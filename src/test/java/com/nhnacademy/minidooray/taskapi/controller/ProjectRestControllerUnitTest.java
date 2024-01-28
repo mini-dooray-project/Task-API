@@ -78,7 +78,7 @@ class ProjectRestControllerUnitTest {
         ProjectResponse projectResponse = new ProjectResponse(10L, 1L, "test",  "test");
         ProjectRequest projectRequest = new ProjectRequest(1L, "test");
 
-        given(projectService.createProject(projectRequest)).willReturn(projectResponse);
+        given(projectService.createProject(any())).willReturn(projectResponse);
 
         mockMvc.perform(post("/api/projects")
                         .content(mapper.writeValueAsString(projectRequest))
@@ -123,7 +123,7 @@ class ProjectRestControllerUnitTest {
         ProjectRequest projectRequest = new ProjectRequest(2L, "test");
         ProjectResponse projectResponse = new ProjectResponse(7L, 2L, "test",  "test");
 
-        given(projectService.updateProject(7L, projectRequest)).willReturn(projectResponse);
+        given(projectService.updateProject(anyLong(), any())).willReturn(projectResponse);
 
         mockMvc.perform(put("/api/projects/{projectId}", 7L)
                         .content(mapper.writeValueAsString(projectRequest))

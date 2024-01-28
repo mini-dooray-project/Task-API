@@ -1,9 +1,9 @@
 package com.nhnacademy.minidooray.taskapi.domain;
 
 import com.nhnacademy.minidooray.taskapi.entity.TaskTag;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class TaskTagDto {
     private Long taskId;
     private Long tagId;

@@ -71,7 +71,7 @@ class TaskTagRestControllerUnitTest {
         ObjectMapper mapper = new ObjectMapper();
         TaskTagDto taskTagDto = new TaskTagDto(12L, 1L);
 
-        given(taskTagService.createTaskTag(taskTagDto)).willReturn(taskTagDto);
+        given(taskTagService.createTaskTag(any())).willReturn(taskTagDto);
 
         mockMvc.perform(post("/api/tasks/tags")
                         .content(mapper.writeValueAsString(taskTagDto))
@@ -88,7 +88,7 @@ class TaskTagRestControllerUnitTest {
         ObjectMapper mapper = new ObjectMapper();
         TaskTagDto taskTagDto = new TaskTagDto(11L, 12L);
 
-        given(taskTagService.createTaskTag(taskTagDto)).willThrow(TaskNotExistException.class);
+        given(taskTagService.createTaskTag(any())).willThrow(TaskNotExistException.class);
 
         mockMvc.perform(post("/api/tasks/tags")
                         .content(mapper.writeValueAsString(taskTagDto))
@@ -103,7 +103,7 @@ class TaskTagRestControllerUnitTest {
         ObjectMapper mapper = new ObjectMapper();
         TaskTagDto taskTagDto = new TaskTagDto(11L, 1L);
 
-        given(taskTagService.createTaskTag(taskTagDto)).willThrow(TaskTagAlreadyExistException.class);
+        given(taskTagService.createTaskTag(any())).willThrow(TaskTagAlreadyExistException.class);
         mockMvc.perform(post("/api/tasks/tags")
                         .content(mapper.writeValueAsString(taskTagDto))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -117,7 +117,7 @@ class TaskTagRestControllerUnitTest {
         ObjectMapper mapper = new ObjectMapper();
         TaskTagDto taskTagDto = new TaskTagDto(20L, 1L);
 
-        given(taskTagService.createTaskTag(taskTagDto)).willThrow(TaskNotExistException.class);
+        given(taskTagService.createTaskTag(any())).willThrow(TaskNotExistException.class);
         mockMvc.perform(post("/api/tasks/tags")
                         .content(mapper.writeValueAsString(taskTagDto))
                         .contentType(MediaType.APPLICATION_JSON))

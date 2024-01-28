@@ -158,7 +158,7 @@ class TaskRestControllerUnitTest {
                 new TaskResponse(1L, "changeTitle", "changeContentTest", "testUser", LocalDateTime.now(), null, 1L,
                         null, null, null, null);
 
-        given(taskService.updateTask(1L, taskRequest)).willReturn(taskResponse);
+        given(taskService.updateTask(anyLong(), any())).willReturn(taskResponse);
         mockMvc.perform(put("/api/tasks/{taskId}", 1L).content(mapper.writeValueAsString(taskRequest))
                         .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
